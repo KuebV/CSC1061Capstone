@@ -1,0 +1,15 @@
+# ninja log v5
+3	212	7161671066475108	build.ninja	653ea99536493f1a
+45	675	7161670242573811	CMakeFiles/CSC1061Capstone.dir/Tools/File.cpp.obj	be7485fc972cd8e
+8	1725	7161670253086032	CMakeFiles/CSC1061Capstone.dir/game/inventory.cpp.obj	7b49b5a93e5b38e2
+13	169	7161670237502666	CMakeFiles/CSC1061Capstone.dir/Tools/InputManager.cpp.obj	cea91a6f3ac3f79e
+27	1043	7161670246256067	CMakeFiles/CSC1061Capstone.dir/Tools/Tag.cpp.obj	6c535a866dd11390
+18	401	7161670239833188	CMakeFiles/CSC1061Capstone.dir/Tools/TileMap.cpp.obj	82b8e05004d9c8d4
+51	502	7161670240843423	CMakeFiles/CSC1061Capstone.dir/rect.cpp.obj	9c151d8139d696b0
+0	1721	7161670253046026	CMakeFiles/CSC1061Capstone.dir/vector2.cpp.obj	be5ad23b0748b15d
+22	1726	7161670253096037	CMakeFiles/CSC1061Capstone.dir/game/player.cpp.obj	afc78111d9a6a161
+39	1862	7161670254429338	CMakeFiles/CSC1061Capstone.dir/WorldGen.cpp.obj	ef33b511f98c287f
+33	2334	7161670259180404	CMakeFiles/CSC1061Capstone.dir/main.cpp.obj	abf6032437b78ded
+2335	2802	7161670263801449	CSC1061Capstone.exe	dd8502cf3fbea5b7
+4	1717	7161671885828247	CMakeFiles/CSC1061Capstone.dir/main.cpp.obj	abf6032437b78ded
+1718	2159	7161671890199234	CSC1061Capstone.exe	dd8502cf3fbea5b7
