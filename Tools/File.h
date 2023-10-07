@@ -2,8 +2,8 @@
 // Created by Rob on 9/9/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_FILE_H
-#define WORLDGENERATIONTEST_FILE_H
+#ifndef CSC1061CAPSTONET_FILE_H
+#define CSC1061CAPSTONET_FILE_H
 
 #include <vector>
 #include <string>
@@ -19,4 +19,4 @@ private:
 };
 
 
-#endif //WORLDGENERATIONTEST_FILE_H
+#endif //CSC1061CAPSTONE_FILE_H

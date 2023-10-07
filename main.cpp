@@ -10,9 +10,15 @@
 #include "Tools/InputKey.h"
 #include "Tools/InputManager.h"
 #include "Tools/TileMap.h"
-#include "game/inventory.h"
+#include "game/window.h"
 #include "Tools/Tiles.h"
 #include "Tools/File.h"
+#include "game/item.h"
+#include "game/inventory.h"
+#include "game/items/stick.h"
+#include "game/items/stone.h"
+#include "game/alertBox.h"
+#include "game/item_drop_engine.h"
 
 
 #define WORLDSIZE 119
@@ -23,7 +29,7 @@
 
 int main() {
 
-    File logFile("latest.log");
+    File logFile("latest.logs");
 
     std::unordered_map<std::string, std::string> worldGenTags = {
             { "worldSeed", "-1"},
@@ -43,10 +49,10 @@ int main() {
     std::cout << "World Seed: " << worldGenTags["worldSeed"] << '\n';
     std::cout << "World Density: " << worldGenTags["worldDensity"] << '\n';
 
-    /*for (int i = 0; i < 255; i++){ // Debug
+    for (int i = 0; i < 255; i++){ // Debug
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i);
         std::cout << i << '\n';
-    }*/
+    }
 
     std::cout << "\nPress \"ENTER\" to generate the world\n";
     std::cout << "NOTE: Do not resize the terminal window after generating the world, you may resize it now if you want\n";
@@ -112,19 +118,22 @@ int main() {
 
     logFile.Append("World Generated. Spawning Player...\n");
 
-    inventory inv;
+    window inv(10, 20, GetStdHandle(STD_OUTPUT_HANDLE));
+    window crafting(10, 15, GetStdHandle(STD_OUTPUT_HANDLE));
+
+    alertBox alert(windowWidth, windowHeight, GetStdHandle(STD_OUTPUT_HANDLE));
 
     player currPlayer(playerSpawn);
     currPlayer.lastPositionNumber = worldMap[playerSpawn.x][playerSpawn.y];
 
-    item placeholderItem;
-    placeholderItem.count = 10;
-    placeholderItem.id = itemType::Sticks;
-    placeholderItem.itemName = "Sticks";
-
-    currPlayer.AddItem(placeholderItem);
-
-    logFile.Append("Items in Inventory: " + std::to_string(currPlayer.inventoryList.size()) + "\n");
+    /*for (int i = 0; i < 5; i++){
+        if ((rand() % 10 + 1) % 2 == 0){
+            inventory::AddItem(new stick());
+        }
+        else{
+            inventory::AddItem(new stone());
+        }
+    }*/
 
     for (int y = 0; y < WorldGen::worldSize.height; y++){
         for (int x = 0; x < WorldGen::worldSize.width; x++){
@@ -144,6 +153,9 @@ int main() {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0);
         std::cout << '\n';
     }
+
+
+    alert.ShowDialogBox(std::vector<std::string>{"Hello!", "This an alert box!", "Press your ESCAPE key to close this box!"}, worldMap, 112);
 
 
     // Player Movement & World Controls
@@ -175,91 +187,51 @@ int main() {
                 const int inventoryWidth = 15;
                 const int inventoryHeight = 10;
 
-                if (!currPlayer.inventoryOpen){
+                if (!currPlayer.inventoryOpen && !inv.isOpen){
                     currPlayer.ToggleInventoryMovementBehavior();
-                    vector2 topLeftCorner = currPlayer.currentPosition;
+                    inv.ShowWindow(worldMap, "Inventory: ", currPlayer.currentPosition);
 
-#pragma region InventoryAdjustments
-                    for (int r = 0; r < 3; r++){
-                        topLeftCorner = topLeftCorner.right();
-                    }
+                    COORD cursor = inv.getWindowPos().ToCOORD();
+                    for (int i = 0; i < inventory::items.size(); i++){
+                        item* item = inventory::items[i];
 
-                    for (int u = 0; u < inventoryHeight / 2; u++){
-                        topLeftCorner = topLeftCorner.up();
-                    }
-
-                    if (topLeftCorner.peekUp(inventoryHeight / 2) <= 0){
-                        vector2 newPos = topLeftCorner;
-                        while (newPos.y <= 0){
-                            newPos = newPos.down();
-                        }
-                        topLeftCorner = newPos;
-                    }
-
-                    if (topLeftCorner.peekDown(inventoryHeight) >= WorldGen::worldSize.height){
-                        vector2 newPos = topLeftCorner;
-                        while (newPos.peekDown(inventoryHeight) >= WorldGen::worldSize.height){
-                            newPos = newPos.up();
-                        }
-                        topLeftCorner = newPos;
-                    }
-
-                    if (topLeftCorner.peekRight(inventoryWidth) >= WorldGen::worldSize.width){
-                        topLeftCorner = vector2(topLeftCorner.x - 13, topLeftCorner.y);
-                    }
-
-#pragma endregion InventoryAdjustments
-
-                    inv.SetTopLeftPosition(topLeftCorner);
-                    inv.SetCurrentPosition(currPlayer.currentPosition);
-                    inv.SetWindowHeight(inventoryHeight);
-                    inv.SetWindowWidth(inventoryWidth);
-
-                    for (int y = topLeftCorner.y; y < topLeftCorner.y + inventoryHeight; y++){
-                        for (int x = topLeftCorner.x; x < topLeftCorner.x + inventoryWidth; x++){
-                            COORD coord;
-                            coord.X = x;
-                            coord.Y = y;
-                            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-
-                            std::cout << ' ';
-                        }
-                        std::cout << '\n';
-                    }
-
-                    COORD cursor;
-                    cursor.X = topLeftCorner.x;
-                    cursor.Y = topLeftCorner.y;
-                    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
-                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-                    std::cout << "Inventory:";
-
-                    for (auto& item : currPlayer.inventoryList){
                         cursor.Y++;
                         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Colors::DefaultWhite);
 
-                        std::cout << item.itemName << " (" << item.count << ")";
+                        std::cout << "(" << i + 1 << ") " << item->GetName() << " (Qty: " << item->GetCount() << ")";
                     }
 
                 }
                 else{
                     currPlayer.ToggleInventoryMovementBehavior();
-                    std::vector<Tile> tileVector = inv.GetOriginalTiles(worldMap);
-                    for (int i = 0; i < tileVector.size(); i++){
-                        vector2 v = tileVector[i].pos;
-                        int tileValue = tileVector[i].tileNumber;
-
-                        COORD cursor = v.ToCOORD();
-                        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
-                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), TileMap::IntToColor(tileValue));
-                        std::cout << TileMap::IntToChar(tileValue);
-                    }
+                    inv.HideWindow();
                 }
 
                 break;
             }
+            case InputKey::UppercaseX:
+            case InputKey::LowercaseX:{
+                int tileValue = worldMap[currPlayer.currentPosition.x][currPlayer.currentPosition.y];
+                worldMap[currPlayer.currentPosition.x][currPlayer.currentPosition.y] = WorldGen::ModifiedTileResult(tileValue);
+
+                SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), currPlayer.CurrentPosition_COORD());
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), TileMap::IntToColor(WorldGen::ModifiedTileResult(tileValue)));
+                std::cout << TileMap::IntToChar(WorldGen::ModifiedTileResult(tileValue));
+
+                item_drop_engine::handleHarvesting(tileValue);
+                break;
+            }
+            case InputKey::LowercaseF:{
+                alert.ShowDialogBox("Hello World!", worldMap, 112);
+                break;
+            }
+            case InputKey::EscapeBtn:{
+                alert.HideDialogBox();
+                break;
+            }
+
+
 
         }
 

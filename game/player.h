@@ -2,21 +2,17 @@
 // Created by Rob on 8/30/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_PLAYER_H
-#define WORLDGENERATIONTEST_PLAYER_H
+#ifndef CSC1061CAPSTONE_PLAYER_H
+#define CSC1061CAPSTONE_PLAYER_H
 
 
 #include "../vector2.h"
-#include "inventory.h"
+#include "window.h"
 #include "itemType.h"
+#include "item.h"
 #include <string>
 #include <windows.h>
 
-struct item{
-    int count;
-    itemType id;
-    std::string itemName;
-};
 
 class player {
 public:
@@ -29,7 +25,7 @@ public:
     bool disableMovement;
     bool inventoryOpen;
 
-    std::vector<item> inventoryList;
+
 
 
     player(vector2 spawnpoint);
@@ -38,11 +34,7 @@ public:
     COORD LastPosition_COORD();
     void ToggleInventoryMovementBehavior();
 
-    bool AddItem(item item);
-    bool ExistsInInventory(item item);
-    bool ModifyInventory(item oldItem, item newItem);
-
 };
 
 
-#endif //WORLDGENERATIONTEST_PLAYER_H
+#endif //CSC1061CAPSTONE_PLAYER_H

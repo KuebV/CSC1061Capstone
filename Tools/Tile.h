@@ -2,8 +2,8 @@
 // Created by Rob on 9/1/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_TILE_H
-#define WORLDGENERATIONTEST_TILE_H
+#ifndef CSC1061CAPSTONE_TILE_H
+#define CSC1061CAPSTONE_TILE_H
 
 #include "../vector2.h"
 
@@ -12,4 +12,4 @@ struct Tile{
     int tileNumber;
 };
 
-#endif //WORLDGENERATIONTEST_TILE_H
+#endif //CSC1061CAPSTONE_TILE_H

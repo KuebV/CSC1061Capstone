@@ -2,8 +2,8 @@
 // Created by Rob on 8/31/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_INPUTKEY_H
-#define WORLDGENERATIONTEST_INPUTKEY_H
+#ifndef CSC1061CAPSTONE_INPUTKEY_H
+#define CSC1061CAPSTONE_INPUTKEY_H
 
 enum InputKey{ // ASCII
     Backspace = 8,
@@ -84,4 +84,4 @@ enum InputKey{ // ASCII
     LowercaseZ = 122,
 };
 
-#endif //WORLDGENERATIONTEST_INPUTKEY_H
+#endif //CSC1061CAPSTONE_INPUTKEY_H

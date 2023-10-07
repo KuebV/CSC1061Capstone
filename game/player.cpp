@@ -56,32 +56,3 @@ void player::ToggleInventoryMovementBehavior() {
     this->disableMovement = !this->disableMovement;
 }
 
-bool player::ExistsInInventory(item item) {
-    for (int i = 0; i < inventoryList.size(); i++){
-        if (inventoryList[i].id == item.id)
-            return true;
-    }
-    return false;
-}
-
-bool player::ModifyInventory(item oldItem, item newItem) {
-    for (auto & i : inventoryList){
-        if (i.id == oldItem.id){
-            i = newItem;
-        }
-    }
-}
-
-bool player::AddItem(item item) {
-    if (ExistsInInventory(item)){
-        for (int i = 0; i < inventoryList.size(); i++){
-            if (inventoryList[i].id == item.id){
-                inventoryList[i].count++;
-            }
-        }
-    }
-    else{
-        inventoryList.push_back(item);
-    }
-}
-

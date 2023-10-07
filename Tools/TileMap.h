@@ -2,8 +2,8 @@
 // Created by Rob on 8/31/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_TILEMAP_H
-#define WORLDGENERATIONTEST_TILEMAP_H
+#ifndef CSC1061CAPSTONE_TILEMAP_H
+#define CSC1061CAPSTONE_TILEMAP_H
 
 
 #include <unordered_map>
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //WORLDGENERATIONTEST_TILEMAP_H
+#endif //CSC1061CAPSTONE_TILEMAP_H

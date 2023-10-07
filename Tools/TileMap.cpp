@@ -21,6 +21,7 @@ char TileMap::IntToChar(const int &i) {
         case 6:
             return '.';
         case 7:
+        case 8:
             return '#';
         default:
             return '?';
@@ -44,6 +45,8 @@ int TileMap::IntToColor(const int &i) {
             return 40;
         case 7:
             return 102;
+        case 8:
+            return 96;
         default:
             return 13;
     }

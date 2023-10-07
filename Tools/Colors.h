@@ -2,8 +2,8 @@
 // Created by Rob on 8/31/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_COLORS_H
-#define WORLDGENERATIONTEST_COLORS_H
+#ifndef CSC1061CAPSTONE_COLORS_H
+#define CSC1061CAPSTONE_COLORS_H
 
 enum Colors{
     DefaultBlack = 0,
@@ -24,4 +24,4 @@ enum Colors{
     DefaultWhite = 15
 };
 
-#endif //WORLDGENERATIONTEST_COLORS_H
+#endif //CSC1061CAPSTONE_COLORS_H

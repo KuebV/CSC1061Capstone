@@ -2,12 +2,14 @@
 // Created by Rob on 9/8/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_ITEMTYPE_H
-#define WORLDGENERATIONTEST_ITEMTYPE_H
+#ifndef CSC1061CAPSTONE_ITEMTYPE_H
+#define CSC1061CAPSTONE_ITEMTYPE_H
 
 enum itemType{
+    NAI,
     Stones,
     Sticks,
+    Dirt,
     Logs,
     Flint,
     StoneHatchet,
@@ -16,4 +18,4 @@ enum itemType{
     FlintPickaxe,
 };
 
-#endif //WORLDGENERATIONTEST_ITEMTYPE_H
+#endif //CSC1061CAPSTONE_ITEMTYPE_H

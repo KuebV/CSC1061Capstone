@@ -2,8 +2,8 @@
 // Created by Rob on 8/30/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_VECTOR2_H
-#define WORLDGENERATIONTEST_VECTOR2_H
+#ifndef CSC1061CAPSTONE_VECTOR2_H
+#define CSC1061CAPSTONE_VECTOR2_H
 
 #include <windows.h>
 #include <string>
@@ -35,4 +35,4 @@ public:
 };
 
 
-#endif //WORLDGENERATIONTEST_VECTOR2_H
+#endif //CSC1061CAPSTONE_VECTOR2_H

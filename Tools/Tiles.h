@@ -2,8 +2,8 @@
 // Created by Rob on 8/31/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_TILES_H
-#define WORLDGENERATIONTEST_TILES_H
+#ifndef CSC1061CAPSTONE_TILES_H
+#define CSC1061CAPSTONE_TILES_H
 
 enum Tiles{
     Water = 0,
@@ -13,6 +13,8 @@ enum Tiles{
     Player = 4,
     Tree = 5,
     Rock = 6,
+    Dirt_Tile = 7,
+
 };
 
-#endif //WORLDGENERATIONTEST_TILES_H
+#endif //CSC1061CAPSTONE_TILES_H

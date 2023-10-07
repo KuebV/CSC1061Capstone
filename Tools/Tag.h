@@ -2,8 +2,8 @@
 // Created by Rob on 8/28/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_TAG_H
-#define WORLDGENERATIONTEST_TAG_H
+#ifndef CSC1061CAPSTONE_TAG_H
+#define CSC1061CAPSTONE_TAG_H
 
 
 #include <unordered_map>
@@ -22,4 +22,4 @@ private:
 };
 
 
-#endif //WORLDGENERATIONTEST_TAG_H
+#endif //CSC1061CAPSTONE_TAG_H

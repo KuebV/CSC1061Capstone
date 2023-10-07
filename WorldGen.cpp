@@ -191,6 +191,27 @@ vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
     return spawn;
 }
 
+/*0 - water
+ * 1 - solid
+ * 2 - sand
+ * 3 - sand
+ * 4 - player
+ * 5 - forest
+ * 6 - rocks
+ * 7 - dirt
+ * */
 
+int WorldGen::ModifiedTileResult(int beforeTile) {
+    switch (beforeTile){
+        case 1:
+            return 7;
+        case 5:
+        case 6:
+            return 1;
+        default:
+            return beforeTile;
+
+    }
+}
 
 

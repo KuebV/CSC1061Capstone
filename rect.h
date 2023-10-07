@@ -2,8 +2,8 @@
 // Created by Rob on 9/9/2023.
 //
 
-#ifndef WORLDGENERATIONTEST_RECT_H
-#define WORLDGENERATIONTEST_RECT_H
+#ifndef CSC1061CAPSTONE_RECT_H
+#define CSC1061CAPSTONE_RECT_H
 
 #include <string>
 
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //WORLDGENERATIONTEST_RECT_H
+#endif //CSC1061CAPSTONE_RECT_H
