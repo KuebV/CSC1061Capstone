@@ -108,3 +108,18 @@ void window::HideWindow() {
 vector2 window::getWindowPos() {
     return this->windowPos;
 }
+
+void window::RefreshInventoryWindow() {
+    COORD cursor = getWindowPos().ToCOORD();
+    for (int i = 0; i < inventory::items.size(); i++){
+        item* item = inventory::items[i];
+
+        cursor.Y++;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Colors::DefaultWhite);
+
+        std::cout << "(" << i + 1 << ") " << item->GetName() << " (Qty: " << item->GetCount() << ")";
+    }
+}
+
+

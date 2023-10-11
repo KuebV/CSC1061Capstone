@@ -6,16 +6,17 @@
 #define CSC1061CAPSTONE_ITEMTYPE_H
 
 enum itemType{
-    NAI,
+    NAI, // Not an Item
     Stones,
     Sticks,
     Dirt,
     Logs,
-    Flint,
+    Coal,
+    Iron,
+    Gold,
     StoneHatchet,
     StonePickaxe,
-    FlintHatchet,
-    FlintPickaxe,
+
 };
 
 #endif //CSC1061CAPSTONE_ITEMTYPE_H

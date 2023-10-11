@@ -133,6 +133,24 @@ build CMakeFiles/CSC1061Capstone.dir/game/item.cpp.obj: CXX_COMPILER__CSC1061Cap
   OBJECT_DIR = CMakeFiles\CSC1061Capstone.dir
   OBJECT_FILE_DIR = CMakeFiles\CSC1061Capstone.dir\game
 
+build CMakeFiles/CSC1061Capstone.dir/game/crafting.cpp.obj: CXX_COMPILER__CSC1061Capstone_Debug C$:/Users/Rob/CLionProjects/CSC1061Capstone/game/crafting.cpp || cmake_object_order_depends_target_CSC1061Capstone
+  DEP_FILE = CMakeFiles\CSC1061Capstone.dir\game\crafting.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\CSC1061Capstone.dir
+  OBJECT_FILE_DIR = CMakeFiles\CSC1061Capstone.dir\game
+
+build CMakeFiles/CSC1061Capstone.dir/CaveGeneration.cpp.obj: CXX_COMPILER__CSC1061Capstone_Debug C$:/Users/Rob/CLionProjects/CSC1061Capstone/CaveGeneration.cpp || cmake_object_order_depends_target_CSC1061Capstone
+  DEP_FILE = CMakeFiles\CSC1061Capstone.dir\CaveGeneration.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\CSC1061Capstone.dir
+  OBJECT_FILE_DIR = CMakeFiles\CSC1061Capstone.dir
+
+build CMakeFiles/CSC1061Capstone.dir/CONSOLE.cpp.obj: CXX_COMPILER__CSC1061Capstone_Debug C$:/Users/Rob/CLionProjects/CSC1061Capstone/CONSOLE.cpp || cmake_object_order_depends_target_CSC1061Capstone
+  DEP_FILE = CMakeFiles\CSC1061Capstone.dir\CONSOLE.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\CSC1061Capstone.dir
+  OBJECT_FILE_DIR = CMakeFiles\CSC1061Capstone.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CSC1061Capstone
@@ -141,7 +159,7 @@ build CMakeFiles/CSC1061Capstone.dir/game/item.cpp.obj: CXX_COMPILER__CSC1061Cap
 #############################################
 # Link the executable CSC1061Capstone.exe
 
-build CSC1061Capstone.exe: CXX_EXECUTABLE_LINKER__CSC1061Capstone_Debug CMakeFiles/CSC1061Capstone.dir/main.cpp.obj CMakeFiles/CSC1061Capstone.dir/WorldGen.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/Tag.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/player.cpp.obj CMakeFiles/CSC1061Capstone.dir/vector2.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/InputManager.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/window.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/TileMap.cpp.obj CMakeFiles/CSC1061Capstone.dir/rect.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/File.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/inventory.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/alertBox.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/item_drop_engine.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/item.cpp.obj
+build CSC1061Capstone.exe: CXX_EXECUTABLE_LINKER__CSC1061Capstone_Debug CMakeFiles/CSC1061Capstone.dir/main.cpp.obj CMakeFiles/CSC1061Capstone.dir/WorldGen.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/Tag.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/player.cpp.obj CMakeFiles/CSC1061Capstone.dir/vector2.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/InputManager.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/window.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/TileMap.cpp.obj CMakeFiles/CSC1061Capstone.dir/rect.cpp.obj CMakeFiles/CSC1061Capstone.dir/Tools/File.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/inventory.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/alertBox.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/item_drop_engine.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/item.cpp.obj CMakeFiles/CSC1061Capstone.dir/game/crafting.cpp.obj CMakeFiles/CSC1061Capstone.dir/CaveGeneration.cpp.obj CMakeFiles/CSC1061Capstone.dir/CONSOLE.cpp.obj
   FLAGS = -g
   LINK_FLAGS = -static
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

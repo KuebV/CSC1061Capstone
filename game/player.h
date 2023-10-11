@@ -10,23 +10,29 @@
 #include "window.h"
 #include "itemType.h"
 #include "item.h"
+#include "PlayerFlags.h"
 #include <string>
 #include <windows.h>
+#include <memory>
 
 
 class player {
 public:
 
-    vector2 currentPosition;
-    vector2 lastPosition;
-    int lastPositionNumber;
-    vector2 spawnPoint;
-
     bool disableMovement;
     bool inventoryOpen;
+    bool inCaves;
 
+    std::unique_ptr<PlayerFlags> playerFlag = std::make_unique<PlayerFlags>();
+    std::unique_ptr<vector2> currentPosition = std::make_unique<vector2>();
+    std::unique_ptr<vector2> lastPosition = std::make_unique<vector2>();
+    std::unique_ptr<vector2> spawnPoint = std::make_unique<vector2>();
 
+    std::unique_ptr<vector2> lastPositionFlagChange = std::make_unique<vector2>();
+    std::unique_ptr<int> lastFlagChangeValue = std::make_unique<int>();
 
+    std::unique_ptr<item> selectedItem = std::make_unique<item>();
+    std::unique_ptr<vector2> currentCave = std::make_unique<vector2>();
 
     player(vector2 spawnpoint);
     void MovePlayer(const std::string& direction);

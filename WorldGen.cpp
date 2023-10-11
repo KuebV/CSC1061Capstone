@@ -5,8 +5,10 @@
 #include <unordered_map>
 #include <vector>
 #include "WorldGen.h"
+#include "CaveGeneration.h"
 
 rect WorldGen::worldSize;
+int** WorldGen::WorldGenCopy;
 
 int **WorldGen::GenerateBasicWorld(int fillDensity) {
     int** map = new int*[WorldGen::worldSize.width];
@@ -168,6 +170,43 @@ int **WorldGen::GenerateForestry(int **detailedMap, int densityForestry) {
     return detailedMap;
 }
 
+int **WorldGen::GenerateBoulders(int **detailedMap, int densityRocks) {
+    for (int x = 0; x < WorldGen::worldSize.width; x++) {
+        for (int y = 0; y < WorldGen::worldSize.height; y++) {
+            if (detailedMap[x][y] != 1)
+                continue;
+
+            detailedMap[x][y] = rand() % 100 + 1 > densityRocks ? 6 : 1;
+        }
+    }
+
+    /*for (int i = 0; i < 2; i++){
+        for (int x = 0; x < WorldGen::worldSize.width; x++) {
+            for (int y = 0; y < worldSize.height; y++) {
+                if (detailedMap[x][y] == 1 || detailedMap[x][y] == 6){
+                    int* neighboringTiles = GetNeighborNumbers(detailedMap, x, y);
+                    int n = 0;
+                    for (int j = 0; j < 4; j++){
+                        n = neighboringTiles[j] != 0 || neighboringTiles[j] != 2 || neighboringTiles[j] != 3 ? n++ : n;
+                    }
+
+                    if (n > 4){
+                        detailedMap[x][y] = 6;
+                    }
+                    else{
+                        detailedMap[x][y] = 1;
+                    }
+
+                }
+            }
+        }
+    }*/
+
+    return detailedMap;
+}
+
+
+
 vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
     bool suitableSpawnFound = false;
     vector2 spawn;
@@ -178,7 +217,7 @@ vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
         if (randX <= 0 || randX >= worldSize.width || randY <= 0 || randY >= worldSize.height)
             continue;
 
-        if (detailedMap[randX][randY] == 1){
+        if (detailedMap[randX][randY] == 1 || detailedMap[randX][randY] == 15){
             int getSurroundingTiles = GetSurroundingWalls(detailedMap, randX, randY);
             if (getSurroundingTiles >= requiredWalls){
                 spawn.x = randX;
@@ -191,6 +230,9 @@ vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
     return spawn;
 }
 
+
+
+
 /*0 - water
  * 1 - solid
  * 2 - sand
@@ -199,6 +241,12 @@ vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
  * 5 - forest
  * 6 - rocks
  * 7 - dirt
+ * 8 - buildingMode
+ * 14 - mineshaft
+ * 15 - stone
+ * 16 - indestructible stone
+ * 17 - coal
+ * 18 - iron
  * */
 
 int WorldGen::ModifiedTileResult(int beforeTile) {
@@ -208,10 +256,20 @@ int WorldGen::ModifiedTileResult(int beforeTile) {
         case 5:
         case 6:
             return 1;
+        case 17:
+        case 18:
+            return 15;
         default:
             return beforeTile;
 
     }
 }
 
-
+int **WorldGen::GenerateMineshafts(int **detailedMap, int mineshafts) {
+    for (int i = 0; i < mineshafts; i++){
+        vector2 suitablePositions = FindSuitableSpawnPoint(detailedMap, 2);
+        detailedMap[suitablePositions.x][suitablePositions.y] = 14;
+        CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(25, 1, true), suitablePositions);
+    }
+    return detailedMap;
+}

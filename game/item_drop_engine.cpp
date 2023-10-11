@@ -10,6 +10,8 @@
 #include "items/logs.h"
 #include "items/stone.h"
 #include "inventory.h"
+#include "items/coal.h"
+#include "items/iron.h"
 
 void item_drop_engine::handleHarvesting(int resourceTile) {
     std::vector<item*> resources = getResource(resourceTile);
@@ -24,6 +26,13 @@ void item_drop_engine::handleHarvesting(int resourceTile) {
  * 4 - player
  * 5 - forest
  * 6 - rocks
+ * 7 - dirt
+ * 8 - buildingMode
+ * 14 - mineshaft
+ * 15 - stone
+ * 16 - indestructible stone
+ * 17 - coal
+ * 18 - iron
  * */
 std::vector<item *> item_drop_engine::getResource(int resourceTile) {
     std::vector<item*> itemDrops;
@@ -50,6 +59,18 @@ std::vector<item *> item_drop_engine::getResource(int resourceTile) {
             item* _stone = new stone();
             setDropCount(_stone);
             itemDrops.push_back(_stone);
+            break;
+        }
+        case 17:{
+            item* _coal = new coal();
+            setDropCount(_coal);
+            itemDrops.push_back(_coal);
+            break;
+        }
+        case 18:{
+            item* _iron = new iron();
+            setDropCount(_iron);
+            itemDrops.push_back(_iron);
             break;
         }
     }

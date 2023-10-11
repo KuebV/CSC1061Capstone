@@ -14,6 +14,8 @@ public:
     static std::vector<item*> items;
 
     static void AddItem(item* item);
+    static void RemoveItem(item* item);
+    static void RemoveAllItems(item* item);
     static bool ExistsInInventory(item item);
 };
 

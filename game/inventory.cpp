@@ -25,4 +25,31 @@ void inventory::AddItem(item* item) {
     items.push_back(item);
 }
 
+void inventory::RemoveItem(item *item) {
+    for (int i = 0; i < items.size(); i++){
+        if (items[i]->GetType() == item->GetType()){
+            items[i]->RemoveItem();
+            return;
+        }
+    }
+}
+
+void inventory::RemoveAllItems(item *item) {
+    for (int i = 0; i < items.size(); i++){
+        if (items[i]->GetType() == item->GetType()){
+            items[i]->RemoveItem();
+            return;
+        }
+    }
+
+    for (int i = 0; i < items.size(); i++){
+        if (items[i]->GetType() == item->GetType()){
+            items.erase(items.begin() + i);
+            break;
+        }
+    }
+
+
+}
+
 

@@ -18,8 +18,11 @@ public:
     static int** GenerateBeaches(int** detailedMap);
     static vector2 FindSuitableSpawnPoint(int** detailedMap, int requiredWalls = 2);
     static int** GenerateForestry(int** detailedMap, int densityForestry);
+    static int** GenerateBoulders(int** detailedMap, int densityRocks);
     static rect worldSize;
     static int ModifiedTileResult(int beforeTile);
+    static int** GenerateMineshafts(int** detailedMap, int mineshafts);
+    static int** WorldGenCopy;
 private:
     static int GetSurroundingWalls(int** map, int xPos, int yPos);
     static int* GetNeighborNumbers(int** map, int xPos, int yPos);

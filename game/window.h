@@ -20,6 +20,7 @@ public:
 
     void ShowWindow(int**& mapArr, const std::string& windowName, vector2 playerPos);
     void HideWindow();
+    void RefreshInventoryWindow();
 
     bool isOpen;
     vector2 getWindowPos();

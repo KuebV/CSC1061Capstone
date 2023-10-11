@@ -13,6 +13,7 @@ class TileMap {
 public:
     static char IntToChar(const int& i);
     static int IntToColor(const int& i);
+    static int IntToColorWithBackground(const int& i, const int& backgroundTile);
 };
 
 
