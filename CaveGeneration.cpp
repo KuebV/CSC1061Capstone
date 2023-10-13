@@ -6,6 +6,7 @@
 #include <iostream>
 #include "CaveGeneration.h"
 #include "WorldGen.h"
+#include "Tools/File.h"
 
 rect CaveGeneration::terminalSize;
 std::vector<std::vector<std::vector<std::vector<int>>>> CaveGeneration::Caves;
@@ -47,11 +48,15 @@ std::vector<std::vector<int>> CaveGeneration::GenerateSingleCave(int fillDensity
         }
     }
 
+    Print("\nSingle Cave Sum (Before Offset): " + std::to_string(CaveSum(singleCave)));
+
     for (int x = 0; x < terminalSize.width; x++){
         for (int y = 0; y < terminalSize.height; y++){
             singleCave[x][y] = singleCave[x][y] == 0 ? 16 : 15;
         }
     }
+
+    Print("\nSingle Cave Sum (After Offset): " + std::to_string(CaveSum(singleCave)));
 
     if (generateExit){
         vector2 exit = WorldGen::FindSuitableSpawnPoint(ToIntArray(singleCave));
@@ -130,6 +135,11 @@ bool CaveGeneration::CaveEmpty(std::vector<std::vector<int>> cave) {
         }
     }
     return true;
+}
+
+void CaveGeneration::Print(const std::string msg) {
+    std::unique_ptr<File> logFile = std::make_unique<File>("caves.logs");
+    logFile->Append(msg);
 }
 
 

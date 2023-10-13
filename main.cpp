@@ -345,38 +345,42 @@ int main() {
             continue;
         }
 
-        if (currPlayer.inCaves && currPlayer.currentPosition->x == 0 || currPlayer.currentPosition->x >= WorldGen::worldSize.width - 1 || currPlayer.currentPosition->y == 0 || currPlayer.currentPosition->y >= WorldGen::worldSize.height - 1){
-            vector2 newCavePos;
+        if (currPlayer.inCaves){
+            if (currPlayer.currentPosition->x == 0 || currPlayer.currentPosition->x >= WorldGen::worldSize.width - 1 || currPlayer.currentPosition->y == 0 || currPlayer.currentPosition->y >= WorldGen::worldSize.height - 1){
 
-            if (currPlayer.currentPosition->x == 0){ // Create West Cave
-                newCavePos = currPlayer.currentCave->left();
-                currPlayer.currentPosition->x = WorldGen::worldSize.width - 2;
+                vector2 newCavePos;
+
+                if (currPlayer.currentPosition->x == 0){ // Create West Cave
+                    newCavePos = currPlayer.currentCave->left();
+                    currPlayer.currentPosition->x = WorldGen::worldSize.width - 2;
+                }
+                else if (currPlayer.currentPosition->x == WorldGen::worldSize.width - 1){ // Create East Cave
+                    newCavePos = currPlayer.currentCave->right();
+                    currPlayer.currentPosition->x = 1;
+                }
+                else if (currPlayer.currentPosition->y == 0){ // Create North Cave
+                    newCavePos = currPlayer.currentCave->up();
+                    currPlayer.currentPosition->y = WorldGen::worldSize.height - 2;
+                }
+                else if (currPlayer.currentPosition->y == WorldGen::worldSize.height - 1){ // Create South Cave
+                    newCavePos = currPlayer.currentCave->down();
+                    currPlayer.currentPosition->y = 2;
+                }
+
+                if (CaveGeneration::CaveEmpty(CaveGeneration::Caves[newCavePos.x][newCavePos.y]) || CaveGeneration::CaveSum(CaveGeneration::Caves[newCavePos.x][newCavePos.y]) < 10){
+                    CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(35, 2), newCavePos);
+                }
+
+                *currPlayer.currentCave = newCavePos;
+
+                int** newCave = CaveGeneration::ToIntArray(CaveGeneration::Caves[newCavePos.x][newCavePos.y]);
+                worldMap = newCave;
+
+                console.DrawWorldMap(newCave);
+
             }
-            else if (currPlayer.currentPosition->x == WorldGen::worldSize.width - 1){ // Create East Cave
-                newCavePos = currPlayer.currentCave->right();
-                currPlayer.currentPosition->x = 1;
-            }
-            else if (currPlayer.currentPosition->y == 0){ // Create North Cave
-                newCavePos = currPlayer.currentCave->up();
-                currPlayer.currentPosition->y = WorldGen::worldSize.height - 2;
-            }
-            else if (currPlayer.currentPosition->y == WorldGen::worldSize.height - 1){
-                newCavePos = currPlayer.currentCave->down();
-                currPlayer.currentPosition->y = 2;
-            }
-
-            if (CaveGeneration::CaveEmpty(CaveGeneration::Caves[newCavePos.x][newCavePos.y])){
-                CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(35, 2), newCavePos);
-            }
-
-            *currPlayer.currentCave = newCavePos;
-
-            int** newCave = CaveGeneration::ToIntArray(CaveGeneration::Caves[newCavePos.x][newCavePos.y]);
-            worldMap = newCave;
-
-            console.DrawWorldMap(newCave);
-
         }
+
 
         int lastPos = worldMap[currPlayer.lastPosition->x][currPlayer.lastPosition->y];
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), currPlayer.LastPosition_COORD());

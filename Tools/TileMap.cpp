@@ -29,7 +29,7 @@ char TileMap::IntToChar(const int &i) {
             return '#';
         case 15:
         case 16:
-            return ' ';
+            return '#';
         case 17:
         case 18:{
             return '*';
@@ -62,9 +62,9 @@ int TileMap::IntToColor(const int &i) {
         case 14:
             return 104;
         case 15:
-            return 119;
+            return 136;
         case 16:
-            return 128;
+            return 8;
         case 17:
             return 136;
         case 18:
@@ -138,9 +138,9 @@ int TileMap::IntToColorWithBackground(const int &i, const int &backgroundTile) {
         case 15:{
             switch (i){
                 case 4:
-                    return 116;
+                    return 132;
                 case 8:
-                    return 115;
+                    return 129;
             }
         }
 

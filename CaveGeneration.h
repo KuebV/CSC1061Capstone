@@ -23,6 +23,8 @@ public:
     static int CaveSum(std::vector<std::vector<int>> cave);
     static bool CaveEmpty(std::vector<std::vector<int>> cave);
 
+    static void Print(const std::string msg);
+
     static int** ToIntArray(std::vector<std::vector<int>> cave);
 
 private:
