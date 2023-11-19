@@ -14,9 +14,13 @@
 class alertBox {
 public:
     alertBox(int _width, int _height, HANDLE _handle);
-    void ShowDialogBox(const std::string& message, int** worldMap, int textAttribute);
-    void ShowDialogBox(std::vector<std::string> messages, int** worldMap, int textAttribute);
+    void ShowDialogBox(const std::string& message, std::vector<std::vector<int>> worldMap, int textAttribute);
+    void ShowDialogBox(std::vector<std::string> messages, std::vector<std::vector<int>> worldMap, int textAttribute);
+
+    void ShowDialogBoxAlignLeft(std::vector<std::string> messages, std::vector<std::vector<int>> worldMap, int textAttribute);
+
     void HideDialogBox();
+    bool isActive;
 private:
     std::vector<Tile> originalTiles;
     HANDLE handle;

@@ -27,3 +27,5 @@ int item::GetDropCount() {
 void item::AddItem() {}
 void item::RemoveItem() {}
 
+bool item::isCraftable() { return false; }
+std::map<itemType, int> item::GetCraftingRecipe() { return {}; }

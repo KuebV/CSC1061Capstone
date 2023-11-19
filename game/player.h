@@ -8,7 +8,7 @@
 
 #include "../vector2.h"
 #include "window.h"
-#include "itemType.h"
+#include "items/itemType.h"
 #include "item.h"
 #include "PlayerFlags.h"
 #include <string>
@@ -22,6 +22,10 @@ public:
     bool disableMovement;
     bool inventoryOpen;
     bool inCaves;
+    bool craftingOpen;
+
+    item* selectedItem;
+
 
     std::unique_ptr<PlayerFlags> playerFlag = std::make_unique<PlayerFlags>();
     std::unique_ptr<vector2> currentPosition = std::make_unique<vector2>();
@@ -31,7 +35,6 @@ public:
     std::unique_ptr<vector2> lastPositionFlagChange = std::make_unique<vector2>();
     std::unique_ptr<int> lastFlagChangeValue = std::make_unique<int>();
 
-    std::unique_ptr<item> selectedItem = std::make_unique<item>();
     std::unique_ptr<vector2> currentCave = std::make_unique<vector2>();
 
     player(vector2 spawnpoint);
@@ -39,6 +42,7 @@ public:
     COORD CurrentPosition_COORD();
     COORD LastPosition_COORD();
     void ToggleInventoryMovementBehavior();
+    void ToggleCraftingMovementBehavior();
 
 };
 

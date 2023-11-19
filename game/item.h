@@ -7,7 +7,8 @@
 
 
 #include <string>
-#include "itemType.h"
+#include <map>
+#include "items/itemType.h"
 
 class item {
 public:
@@ -16,6 +17,8 @@ public:
     virtual std::string GetName();
     virtual double GetDropMultiplier();
     virtual int GetDropCount();
+    virtual std::map<itemType, int> GetCraftingRecipe();
+    virtual bool isCraftable();
 
     virtual void AddItem();
     virtual void RemoveItem();

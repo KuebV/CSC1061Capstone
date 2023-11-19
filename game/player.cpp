@@ -57,3 +57,8 @@ void player::ToggleInventoryMovementBehavior() {
     this->disableMovement = !this->disableMovement;
 }
 
+void player::ToggleCraftingMovementBehavior() {
+    this->craftingOpen = !this->craftingOpen;
+    this->disableMovement = !this->disableMovement;
+}
+

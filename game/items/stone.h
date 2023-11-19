@@ -19,6 +19,8 @@ public:
     void AddItem() override { _count++; }
     void RemoveItem() override { _count--; }
 
+    bool isCraftable() override { return false; }
+
 private:
     std::string _name = "Stone";
     int _count = 0;

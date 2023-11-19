@@ -7,6 +7,8 @@
 
 #include <windows.h>
 #include <string>
+#include <vector>
+#include "rect.h"
 
 
 class vector2 {
@@ -26,12 +28,16 @@ public:
 
     COORD ToCOORD();
 
-    bool outOfBounds(int worldSize) const;
+    bool OutOfBounds(rect windowSize);
 
     vector2(int x, int y);
     vector2();
 
     std::string ToString();
+
+    bool IsEqual(vector2 otherVector);
+
+    vector2 newDirection(std::vector<std::vector<int>> map, int preventTile, bool random) const;
 };
 
 

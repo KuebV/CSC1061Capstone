@@ -18,7 +18,7 @@ class window {
 public:
     window(int windowHeight, int windowWidth, HANDLE handle);
 
-    void ShowWindow(int**& mapArr, const std::string& windowName, vector2 playerPos);
+    void ShowWindow(std::vector<std::vector<int>>& mapArr, const std::string& windowName, vector2 playerPos);
     void HideWindow();
     void RefreshInventoryWindow();
 

@@ -48,24 +48,22 @@ std::vector<std::vector<int>> CaveGeneration::GenerateSingleCave(int fillDensity
         }
     }
 
-    Print("\nSingle Cave Sum (Before Offset): " + std::to_string(CaveSum(singleCave)));
-
     for (int x = 0; x < terminalSize.width; x++){
         for (int y = 0; y < terminalSize.height; y++){
             singleCave[x][y] = singleCave[x][y] == 0 ? 16 : 15;
         }
     }
 
-    Print("\nSingle Cave Sum (After Offset): " + std::to_string(CaveSum(singleCave)));
-
     if (generateExit){
-        vector2 exit = WorldGen::FindSuitableSpawnPoint(ToIntArray(singleCave));
+        vector2 exit = WorldGen::FindSuitableSpawnPoint(singleCave);
         singleCave[exit.x][exit.y] = 14;
     }
 
-    //singleCave = GenerateResources(singleCave);
+    singleCave = OreSeeds(singleCave, 17, 2);
+    singleCave = OreSeeds(singleCave, 18, 2);
 
     return singleCave;
+
 
 }
 
@@ -88,7 +86,7 @@ void CaveGeneration::Init() {
     Caves = std::vector<std::vector<std::vector<std::vector<int>>>>(CaveGeneration::terminalSize.width, std::vector<std::vector<std::vector<int>>>(CaveGeneration::terminalSize.height, std::vector<std::vector<int>>(CaveGeneration::terminalSize.width, std::vector<int>(CaveGeneration::terminalSize.height))));
 }
 
-vector2 CaveGeneration::GetExit(int **map) {
+vector2 CaveGeneration::GetExit(std::vector<std::vector<int>> map) {
     for (int x = 0; x < terminalSize.width; x++){
         for (int y = 0; y < terminalSize.height; y++){
             if (map[x][y] == 14){
@@ -96,21 +94,34 @@ vector2 CaveGeneration::GetExit(int **map) {
             }
         }
     }
+
+    return {0, 0};
 }
 
 std::vector<std::vector<int>> CaveGeneration::GenerateResources(std::vector<std::vector<int>> caveMap) {
-    int coalFillDensity = 25;
+    int coalFillDensity = 20;
     int ironFillDensity = 10;
+    int oreDensity = 10;
 
-    for (int x = 0; terminalSize.width; x++){
+    for (int x = 0; x < terminalSize.width; x++){
         for (int y = 0; y < terminalSize.height; y++){
-            if (caveMap[x][y] == 15){
-                caveMap[x][y] = rand() % 100 + 1 > coalFillDensity ? 17 : 15;
+
+            if (caveMap[x][y] != 15)
+                continue;
+
+            int randomizedOreDensity = rand() % 100 + 1;
+            if (randomizedOreDensity < oreDensity){
+                continue;
             }
 
-            if (caveMap[x][y] == 15){
-                caveMap[x][y] = rand() % 100 + 1 > ironFillDensity ? 18 : 15;
+            int oreType = rand() % 100 + 1;
+            if (oreType < ironFillDensity){
+                caveMap[x][y] = 18;
             }
+            else if (oreType < coalFillDensity){
+                caveMap[x][y] = 17;
+            }
+
         }
     }
 
@@ -141,5 +152,19 @@ void CaveGeneration::Print(const std::string msg) {
     std::unique_ptr<File> logFile = std::make_unique<File>("caves.logs");
     logFile->Append(msg);
 }
+
+std::vector<std::vector<int>>
+CaveGeneration::OreSeeds(std::vector<std::vector<int>> caveMap, int tileValue, int spaceDensity) {
+    for (int x = 0; x < terminalSize.width; x++){
+        for (int y = 0; y < terminalSize.height; y++){
+            if (rand() % 100 + 1 < spaceDensity && caveMap[x][y] == 15){
+                caveMap[x][y] = tileValue;
+            }
+        }
+    }
+
+    return caveMap;
+}
+
 
 

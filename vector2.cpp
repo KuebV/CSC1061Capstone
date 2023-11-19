@@ -29,11 +29,6 @@ vector2 vector2::left() const {
     return {x - 1, y};
 }
 
-bool vector2::outOfBounds(int worldSize) const {
-    if (x < 0 || y < 0 || x >= worldSize || y >= worldSize)
-        return true;
-    return false;
-}
 
 COORD vector2::ToCOORD() {
     return {static_cast<SHORT>(x), static_cast<SHORT>(y)};
@@ -58,4 +53,36 @@ int vector2::peekLeft(int n) {
 std::string vector2::ToString() {
     return "{X: " + std::to_string(x) + ", Y: " + std::to_string(y) + "}";
 }
+
+bool vector2::OutOfBounds(rect windowSize) {
+   if (x < 0 || y < 0 || x > windowSize.width || y > windowSize.height)
+       return true;
+   return false;
+}
+
+bool vector2::IsEqual(vector2 otherVector) {
+    if (otherVector.x == x && otherVector.y == y)
+        return true;
+    return false;
+}
+
+vector2 vector2::newDirection(std::vector<std::vector<int>> map, int preventTile, bool random) const {
+    vector2 directions[] = { up(), down(), left(), right() };
+
+    int index = 0;
+    if (!random){
+        for (int i = 0; i < 4; i++){
+            if (map[directions[i].x][directions[i].y] != preventTile){
+                index = i;
+                break;
+            }
+        }
+    }
+    else
+        index = rand() % 3 + 0;
+
+
+    return directions[index];
+}
+
 

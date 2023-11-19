@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
+#include "SaveState.h"
 
 
 class File {
@@ -14,8 +16,14 @@ public:
     File(std::string fileName);
     void Append(const std::string& contents);
     void Append(const std::vector<std::string> contents);
+    void Silence(bool silence);
+
+    bool WriteSaveFile(SaveState data);
+    SaveState ReadSaveFile();
+
 private:
     std::string fileName;
+    bool silenceOutput;
 };
 
 

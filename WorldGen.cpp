@@ -8,12 +8,12 @@
 #include "CaveGeneration.h"
 
 rect WorldGen::worldSize;
-int** WorldGen::WorldGenCopy;
+std::vector<std::vector<int>> WorldGen::WorldGenCopy;
 
-int **WorldGen::GenerateBasicWorld(int fillDensity) {
-    int** map = new int*[WorldGen::worldSize.width];
+std::vector<std::vector<int>> WorldGen::GenerateBasicWorld(int fillDensity) {
+    std::vector<std::vector<int>> map(worldSize.width, std::vector<int>(worldSize.height, 0));
+
     for (int x = 0; x < WorldGen::worldSize.width; x++){
-        map[x] = new int[WorldGen::worldSize.height];
         for (int y = 0; y < WorldGen::worldSize.height; y++){
             map[x][y] =  rand() % 100 + 1 > fillDensity ? 1 : 0;
         }
@@ -21,7 +21,7 @@ int **WorldGen::GenerateBasicWorld(int fillDensity) {
     return map;
 }
 
-int **WorldGen::SmoothExistingBasicWorld(int **basicMap, int smoothness) {
+std::vector<std::vector<int>> WorldGen::SmoothExistingBasicWorld(std::vector<std::vector<int>> basicMap, int smoothness) {
     for (int i = 0; i < smoothness; i++){
         for (int x = 0; x < WorldGen::worldSize.width; x++){
             for (int y = 0; y < WorldGen::worldSize.height; y++){
@@ -38,7 +38,7 @@ int **WorldGen::SmoothExistingBasicWorld(int **basicMap, int smoothness) {
     return basicMap;
 }
 
-int WorldGen::GetSurroundingWalls(int **map, int xPos, int yPos) {
+int WorldGen::GetSurroundingWalls (std::vector<std::vector<int>> map, int xPos, int yPos) {
     int wallCount = 0;
     for (int x = xPos - 1; x <= xPos + 1; x++){
         for (int y = yPos - 1; y <= yPos + 1; y++){
@@ -56,8 +56,8 @@ int WorldGen::GetSurroundingWalls(int **map, int xPos, int yPos) {
 
 
 
-int **WorldGen::GenerateBeaches(int **detailedMap) {
-    // 0 = water
+std::vector<std::vector<int>> WorldGen::GenerateBeaches(std::vector<std::vector<int>> detailedMap) {
+    // 0 = Tile_Water
     // 1 = land
 
     for (int x = 0; x < WorldGen::worldSize.width; x++){
@@ -69,10 +69,7 @@ int **WorldGen::GenerateBeaches(int **detailedMap) {
 
             int numOfSurrounding = GetAmountOfNeighborNumbers(surroundingNumbersOfCurrentPosition);
             if (numOfSurrounding < 4){
-                if (surroundingNumbersOfCurrentPosition[1] == 0)
-                    detailedMap[x][y] = 3;
-                else
-                    detailedMap[x][y] = 2;
+                detailedMap[x][y] = 2;
             }
         }
     }
@@ -84,7 +81,7 @@ int **WorldGen::GenerateBeaches(int **detailedMap) {
 // [1] - right
 // [2] - bottom
 // [3] - left
-int* WorldGen::GetNeighborNumbers(int **map, int xPos, int yPos) {
+int* WorldGen::GetNeighborNumbers(std::vector<std::vector<int>> map, int xPos, int yPos) {
     int* surroundingNumbers = new int[4];
 
     if (yPos - 1 >= 0){
@@ -124,7 +121,7 @@ int WorldGen::GetAmountOfNeighborNumbers(const int *surroundingMap) {
 
 
 // Modified Wave Function Collapse
-/*0 - water
+/*0 - Tile_Water
  * 1 - solid
  * 2 - sand
  * 3 - sand
@@ -132,7 +129,7 @@ int WorldGen::GetAmountOfNeighborNumbers(const int *surroundingMap) {
  * 5 - forest
  * 6 - rocks
  * */
-int **WorldGen::GenerateForestry(int **detailedMap, int densityForestry) {
+std::vector<std::vector<int>> WorldGen::GenerateForestry(std::vector<std::vector<int>> detailedMap, int densityForestry) {
     for (int x = 0; x < WorldGen::worldSize.width; x++){
         for (int y = 0; y < WorldGen::worldSize.height; y++){
             if (detailedMap[x][y] != 1)
@@ -146,7 +143,7 @@ int **WorldGen::GenerateForestry(int **detailedMap, int densityForestry) {
         for (int x = 0; x < WorldGen::worldSize.width; x++){
             for (int y = 0; y < WorldGen::worldSize.height; y++){
 
-                if (detailedMap[x][y] != 1 || detailedMap[x][y] != 5)
+                if (detailedMap[x][y] != 1)
                     continue;
 
                 int* neighborTiles = GetNeighborNumbers(detailedMap, x, y);
@@ -170,7 +167,7 @@ int **WorldGen::GenerateForestry(int **detailedMap, int densityForestry) {
     return detailedMap;
 }
 
-int **WorldGen::GenerateBoulders(int **detailedMap, int densityRocks) {
+std::vector<std::vector<int>> WorldGen::GenerateBoulders(std::vector<std::vector<int>>detailedMap, int densityRocks) {
     for (int x = 0; x < WorldGen::worldSize.width; x++) {
         for (int y = 0; y < WorldGen::worldSize.height; y++) {
             if (detailedMap[x][y] != 1)
@@ -207,7 +204,7 @@ int **WorldGen::GenerateBoulders(int **detailedMap, int densityRocks) {
 
 
 
-vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
+vector2 WorldGen::FindSuitableSpawnPoint(std::vector<std::vector<int>> detailedMap, int requiredWalls) {
     bool suitableSpawnFound = false;
     vector2 spawn;
     while (!suitableSpawnFound){
@@ -233,7 +230,7 @@ vector2 WorldGen::FindSuitableSpawnPoint(int **detailedMap, int requiredWalls) {
 
 
 
-/*0 - water
+/*0 - Tile_Water
  * 1 - solid
  * 2 - sand
  * 3 - sand
@@ -265,11 +262,11 @@ int WorldGen::ModifiedTileResult(int beforeTile) {
     }
 }
 
-int **WorldGen::GenerateMineshafts(int **detailedMap, int mineshafts) {
+std::vector<std::vector<int>> WorldGen::GenerateMineshafts(std::vector<std::vector<int>> detailedMap, int mineshafts) {
     for (int i = 0; i < mineshafts; i++){
         vector2 suitablePositions = FindSuitableSpawnPoint(detailedMap, 2);
         detailedMap[suitablePositions.x][suitablePositions.y] = 14;
-        CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(25, 1, true), suitablePositions);
+        CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(35, 1, true), suitablePositions);
     }
     return detailedMap;
 }

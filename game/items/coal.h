@@ -18,13 +18,15 @@ public:
     void AddItem() override { _count++; }
     void RemoveItem() override { _count--; }
 
+    bool isCraftable() override { return false; }
+
 
 private:
     std::string _name = "Coal";
     int _count = 0;
     itemType _type = itemType::Coal;
-    double _dropMultiplier = 1.0;
-    int _dropCount = 1;
+    double _dropMultiplier = 1.3;
+    int _dropCount = 2;
 };
 
 #endif //CSC1061CAPSTONE_COAL_H

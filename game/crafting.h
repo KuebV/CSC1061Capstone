@@ -12,7 +12,8 @@
 
 class crafting {
 public:
-    static std::map<itemType, std::vector<itemType>> recipes;
+    static std::vector<item*> CraftableItems();
+
 };
 
 

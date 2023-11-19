@@ -9,33 +9,73 @@
 #include "game/player.h"
 #include "Tools/InputKey.h"
 #include "Tools/InputManager.h"
-#include "Tools/TileMap.h"
 #include "game/window.h"
-#include "Tools/Tiles.h"
 #include "Tools/File.h"
 #include "game/item.h"
 #include "game/inventory.h"
 #include "game/items/stick.h"
 #include "game/items/stone.h"
 #include "game/alertBox.h"
-#include "game/item_drop_engine.h"
+#include "game/ItemManager.h"
 #include "CaveGeneration.h"
 #include "CONSOLE.h"
-
+#include "game/Tiles.h"
+#include "game/tiles/Tile_Player.h"
+#include "Tools/SaveState.h"
+#include "game/mainMenu.h"
+#include "game/crafting.h"
+#include "game/items/nullItem.h"
+#include "game/EventManager.h"
 
 #define WORLDSIZE 119
 #define FILL_DENSITY 65
 
 
-
+std::string getOsName()
+{
+#ifdef _WIN32
+    return "Windows 32-bit";
+#elif _WIN64
+    return "Windows 64-bit";
+#elif __APPLE__ || __MACH__
+    return "Mac OSX";
+#elif __linux__
+    return "Linux";
+#elif __FreeBSD__
+    return "FreeBSD";
+#elif __unix || __unix__
+    return "Unix";
+#else
+    return "Other";
+#endif
+}
 
 int main() {
 
+    std::unique_ptr<std::string> osName = std::make_unique<std::string>(getOsName());
+    if (*osName != "Windows 64-bit" && *osName != "Windows 32-bit"){
+        std::cout << "This program is not designed for " << *osName << "!\nPress Enter to Exit\n";
+        std::cin.ignore();
+        exit(1);
+    }
+
+    CONSOLE console(GetStdHandle(STD_OUTPUT_HANDLE));
+    console.MenuCalibration();
+
+    mainMenu mainMenu(GetStdHandle(STD_OUTPUT_HANDLE), console.GetWindowSize());
+    int startMenuPos = mainMenu.DrawMainMenu();
+    std::string result = mainMenu.HandleMainMenu(startMenuPos);
+
+    rect windowSize = console.GetWindowSize();
+
     File logFile("latest.logs");
+    File binFile("savestate.bin");
+    logFile.Silence(false);
 
     std::unordered_map<std::string, std::string> worldGenTags = {
             { "worldSeed", "-1"},
-            { "worldDensity", "35"}
+            { "worldDensity", "35"},
+            { "MaximumTiles", "800000000"}
     };
     std::string worldGenFile = "worldGen.tags";
     if (!Tag::TagFileExists(worldGenFile))
@@ -43,7 +83,7 @@ int main() {
 
     worldGenTags = Tag::ReadTagFile(worldGenFile);
 
-    std::cout << "\nWorld Generation Project\n-----------------\n";
+    /*std::cout << "\nWorld Generation Project\n-----------------\n";
     std::cout << "Written by: Robert Thompson\nFor CSC1061\n";
     std::cout << "-----------------\n";
 
@@ -51,95 +91,100 @@ int main() {
     std::cout << "World Seed: " << worldGenTags["worldSeed"] << '\n';
     std::cout << "World Density: " << worldGenTags["worldDensity"] << '\n';
 
-    for (int i = 0; i < 255; i++){ // Debug
+    *//*for (int i = 0; i < 255; i++){ // Debug
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i);
         std::cout << i << '\n';
-    }
+    }*//*
 
     std::cout << "\nPress \"ENTER\" to generate the world\n";
     std::cout << "NOTE: Do not resize the terminal window after generating the world, you may resize it now if you want\n";
-    std::cin.ignore();
+    std::cin.ignore();*/
+
 
     logFile.Append("Generating World...\n");
 
-
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo);
-
-    short windowWidth = bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
-    short windowHeight = bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
-
-    COORD newConsoleSize;
-    newConsoleSize.X = bufferInfo.dwSize.X - 1;
-    newConsoleSize.Y = windowHeight;
-
-    int status = SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), newConsoleSize);
-    if (status == 0){
-        logFile.Append("Changing Screen Buffer Size Failed! Reason: " + std::to_string(GetLastError()) + "\n");
-    }
-
-    rect rect;
-    rect.height = windowHeight;
-    rect.width = windowWidth;
-
-    WorldGen::worldSize = rect;
-    CaveGeneration::terminalSize = rect;
+    WorldGen::worldSize = windowSize;
+    CaveGeneration::terminalSize = windowSize;
     CaveGeneration::Init();
 
-    logFile.Append("World Size: " + rect.ToString() + "\n");
+    logFile.Append("World Size: " + windowSize.ToString() + "\n");
 
     system("CLS");
 
     //WorldGen::worldSeed = std::stoi(worldGenTags["worldSeed"]) == -1 ? time(NULL) : std::stoi(worldGenTags["worldSeed"]);
     srand(std::stoi(worldGenTags["worldSeed"]) == -1 ? time(NULL) : std::stoi(worldGenTags["worldSeed"]));
 
-    int** worldMap = WorldGen::GenerateBasicWorld(std::stoi(worldGenTags["worldDensity"]));
-    logFile.Append("Basic World Generated. Smoothing Terrain...\n");
+    std::vector<std::vector<int>> worldMap;
+    vector2 playerSpawn;
+    player currPlayer(playerSpawn);
 
-    /*for (int y = 0; y < WorldGen::worldSize; y++){
-        for (int x = 0; x < WorldGen::worldSize; x++){
-            std::cout << numToChar(worldMap[x][y]);
+    console.SetTextAttribute(112);
+
+    if (result == ""){
+        worldMap = WorldGen::GenerateBasicWorld(std::stoi(worldGenTags["worldDensity"]));
+        logFile.Append("Basic World Generated. Smoothing Terrain...\n");
+
+        logFile.Append("Basic World Generated. Smoothing Terrain...\n");
+
+        worldMap = WorldGen::SmoothExistingBasicWorld(worldMap, 5);
+        logFile.Append("Smooth Terrain Completed. Generating Beaches...\n");
+
+        worldMap = WorldGen::GenerateBeaches(worldMap);
+        logFile.Append("Generated Beaches. Generating Forestry...\n");
+
+        worldMap = WorldGen::GenerateForestry(worldMap, 70);
+        logFile.Append("Generated Forests. Generating Boulders...\n");
+
+        worldMap = WorldGen::GenerateBoulders(worldMap, 95);
+        logFile.Append("Boulders Generated. Finding Suitable Player Spawn\n");
+        worldMap = WorldGen::GenerateMineshafts(worldMap, 2);
+
+        playerSpawn = WorldGen::FindSuitableSpawnPoint(worldMap);
+        logFile.Append("Suitable Spawn Found.\n");
+    }
+    else{
+        std::cout << "Loading Saved State...\n";
+        SaveState save = binFile.ReadSaveFile();
+
+        if (save.WindowHeight != console.GetWindowSize().height || save.WindowWidth != console.GetWindowSize().width){
+            console.SetTextAttribute(116);
+            std::cout << "FATAL ERROR: WINDOW SIZE DOES NOT EQUAL THE CURRENT SAVED GAME\n";
+            std::cout << "SAVED WINDOW SIZE: " << std::to_string(save.WindowWidth) << "x" << std::to_string(save.WindowHeight) << "\n";
+            std::cout << "CURRENT WINDOW SIZE: " << std::to_string(console.GetWindowSize().width) << "x" << std::to_string(console.GetWindowSize().height) << "\n";
+
+            std::cout << "\nPRESS ANY KEY TO QUIT";
+            std::cin.ignore();
+            exit(1);
         }
-    }*/
 
-    worldMap = WorldGen::SmoothExistingBasicWorld(worldMap, 5);
-    logFile.Append("Smooth Terrain Completed. Generating Beaches...\n");
+        *currPlayer.currentPosition = {save.PlayerXPosition, save.PlayerYPosition};
+        std::cout << "Current Player Loaded\n";
 
-    worldMap = WorldGen::GenerateBeaches(worldMap);
-    logFile.Append("Generated Beaches. Generating Forestry...\n");
+        inventory::items = save.items;
+        std::cout << "Inventory Loaded\n";
 
-    worldMap = WorldGen::GenerateForestry(worldMap, 85);
-    logFile.Append("Generated Forests. Generating Boulders...\n");
+        worldMap = save.worldState;
+        std::cout << "World Loaded\n";
 
-    worldMap = WorldGen::GenerateBoulders(worldMap, 95);
-    logFile.Append("Boulders Generated. Finding Suitable Player Spawn\n");
-    worldMap = WorldGen::GenerateMineshafts(worldMap, 2);
+        CaveGeneration::Caves = save.caveState;
+        std::cout << "Caves Loaded";
 
-    // 120 * 30 = 3600 Tiles per Map
-    // 3600 * 3600 = 12,960,000
+    }
 
-    vector2 playerSpawn = WorldGen::FindSuitableSpawnPoint(worldMap);
-    logFile.Append("Suitable Spawn Found.\n");
-
-    /*for (int y = 0; y < WorldGen::worldSize; y++){
-        for (int x = 0; x < WorldGen::worldSize; x++){
-            std::cout << worldMap[x][y];
-        }
-        std::cout << '\n';
-    }*/
 
     logFile.Append("World Generated. Spawning Player...\n");
+    logFile.Silence(true);
+    system("CLS");
 
-    window inv(10, 20, GetStdHandle(STD_OUTPUT_HANDLE));
-    window crafting(10, 15, GetStdHandle(STD_OUTPUT_HANDLE));
-    alertBox alert(windowWidth, windowHeight, GetStdHandle(STD_OUTPUT_HANDLE));
-    player currPlayer(playerSpawn);
-    CONSOLE console(GetStdHandle(STD_OUTPUT_HANDLE));
+    window inv(10, 30, GetStdHandle(STD_OUTPUT_HANDLE));
+    window crafting(10, 30, GetStdHandle(STD_OUTPUT_HANDLE));
+    alertBox alert(windowSize.width, windowSize.height, GetStdHandle(STD_OUTPUT_HANDLE));
 
     WorldGen::WorldGenCopy = worldMap;
+    currPlayer.selectedItem = new nullItem();
 
     console.DrawWorldMap(worldMap);
-    alert.ShowDialogBox(std::vector<std::string>{"Hello!", "This an alert box!", "Press your ESCAPE key to close this box!"}, worldMap, 112);
+    alert.ShowDialogBox(std::vector<std::string>{"Hello!", "Welcome to Terra", "Press your ESCAPE key to close this box!"}, worldMap, 112);
 
 
     // Player Movement & World Controls
@@ -166,13 +211,16 @@ int main() {
             case InputKey::UppercaseI:
             case InputKey::LowercaseI:{ // Inventory
 
-                if (!currPlayer.inventoryOpen && !inv.isOpen){
+                if (!currPlayer.inventoryOpen && !inv.isOpen && !currPlayer.craftingOpen){
                     currPlayer.ToggleInventoryMovementBehavior();
                     inv.ShowWindow(worldMap, "Inventory: ", *currPlayer.currentPosition);
 
                     COORD cursor = inv.getWindowPos().ToCOORD();
                     for (int i = 0; i < inventory::items.size(); i++){
                         item* item = inventory::items[i];
+                        if (item->GetCount() <= 0)
+                            continue;
+
 
                         cursor.Y++;
                         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
@@ -195,22 +243,25 @@ int main() {
             }
             case InputKey::UppercaseX:
             case InputKey::LowercaseX:{
+
                 int tileValue = worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y];
-                worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] = WorldGen::ModifiedTileResult(tileValue);
+                if (!Tiles::Map[tileValue]->IsHarvestable())
+                    break;
+
+                EventManager::RegisterEvent(*currPlayer.currentPosition);
+
+                //worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] = WorldGen::ModifiedTileResult(tileValue);
+                worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] = Tiles::Map[tileValue]->GetAfterModificationInteger();
 
                 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), currPlayer.CurrentPosition_COORD());
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), TileMap::IntToColor(WorldGen::ModifiedTileResult(tileValue)));
-                std::cout << TileMap::IntToChar(WorldGen::ModifiedTileResult(tileValue));
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Tiles::Map[tileValue]->GetAfterModificationColor());
+                std::cout << Tiles::Map[tileValue]->GetAfterModificationChar();
 
-                item_drop_engine::handleHarvesting(tileValue);
+                ItemManager::handleHarvesting(tileValue);
                 break;
             }
             case InputKey::LowercaseF:{
                 alert.ShowDialogBox("Hello World!", worldMap, 112);
-                break;
-            }
-            case InputKey::EscapeBtn:{
-                alert.HideDialogBox();
                 break;
             }
             case InputKey::LowercaseB:
@@ -242,94 +293,329 @@ int main() {
             case InputKey::Row7:
             case InputKey::Row8:
             case InputKey::Row9:{
-                if (!currPlayer.inventoryOpen)
-                    continue;
 
+                // Black magic inputs
+                // I guess I wrote this line a few weeks ago now, but it confuses me now?
+                // From what i understand, it converts the ASCII value of the input to an integer
+                // Then we subtract 48 to get the actual input, then subtract 1 again for the index
                 int getIndex = ((int)input - 48) - 1;
                 if (getIndex < 0 || getIndex > inventory::items.size())
                     continue;
 
-                item* selectedItem = inventory::items[getIndex];
+                if (currPlayer.inventoryOpen && !currPlayer.craftingOpen) {
+                    item* selectedItem = inventory::items[getIndex];
 
-                alert.ShowDialogBox(std::vector<std::string>{"Selected Item: " + selectedItem->GetName(), "Actions:", "\'E\' to Equip", "\'Q\' to drop"}, worldMap, 112);
+                    alert.ShowDialogBox(std::vector<std::string>{"Selected Item: " + selectedItem->GetName(), "Actions:", "\'E\' to Equip", "\'Q\' to drop"}, worldMap, 112);
 
-                std::unique_ptr<bool> inputLoop = std::make_unique<bool>(true);
-                while (*inputLoop){
-                    InputKey dialogInput = InputManager::GetInput();
-                    switch (dialogInput){
-                        case InputKey::EscapeBtn:{
-                            alert.HideDialogBox();
-                            *inputLoop = false;
-                            break;
+                    // What??, why didnt I just use a normal boolean here?
+                    // Oh no, the horrors, I might loose a couple nano seconds if I don't use a pointer here
+                    std::unique_ptr<bool> inputLoop = std::make_unique<bool>(true);
+                    while (*inputLoop){
+                        InputKey dialogInput = InputManager::GetInput();
+                        switch (dialogInput){
+                            case InputKey::EscapeBtn:{
+                                alert.HideDialogBox();
+                                *inputLoop = false;
+                                break;
+                            }
+                            case InputKey::UppercaseE:
+                            case InputKey::LowercaseE:{
+                                currPlayer.selectedItem = inventory::GetItem(selectedItem->GetType());
+                                alert.HideDialogBox();
+                                currPlayer.ToggleInventoryMovementBehavior();
+                                inv.HideWindow();
+                                *inputLoop = false;
+                                break;
+                            }
+                            case InputKey::LowercaseQ:{
+                                inventory::RemoveItem(selectedItem);
+
+                                if (selectedItem->GetCount() <= 0){
+                                    alert.HideDialogBox();
+                                }
+
+                                inv.RefreshInventoryWindow();
+                                break;
+                            }
+                            default:
+                                continue;
                         }
-                        case InputKey::UppercaseE:
-                        case InputKey::LowercaseE:{
-                            *currPlayer.selectedItem = *selectedItem;
-                            alert.HideDialogBox();
-                            currPlayer.ToggleInventoryMovementBehavior();
-                            inv.HideWindow();
-                            *inputLoop = false;
-                            break;
+                    }
+                }
+
+                if (currPlayer.craftingOpen && !currPlayer.inventoryOpen){
+                    item* selectedItem = crafting::CraftableItems()[getIndex];
+                    alert.ShowDialogBox(std::vector<std::string>{"Selected Item: " + selectedItem->GetName(), "Actions:", "\'F\' to craft one", "\'G\' to craft multiple"}, worldMap, 112);
+
+                    std::unique_ptr<bool> inputLoop = std::make_unique<bool>(true);
+                    while (*inputLoop){
+                        InputKey dialogInput = InputManager::GetInput();
+                        switch (dialogInput){
+                            case InputKey::EscapeBtn:{
+                                alert.HideDialogBox();
+                                *inputLoop = false;
+                                break;
+                            }
+                            case InputKey::UppercaseF:
+                            case InputKey::LowercaseF:{
+
+                                std::map<itemType, int>::iterator it;
+                                std::map<itemType, int> recipe = selectedItem->GetCraftingRecipe();
+                                for (it = recipe.begin(); it != recipe.end(); it++){
+                                    inventory::RemoveItem(inventory::GetItem(it->first), it->second);
+                                }
+
+                                inventory::AddItem(selectedItem);
+
+                                // Craft One Item
+                                //alert.HideDialogBox();
+                                currPlayer.ToggleCraftingMovementBehavior();
+                                crafting.HideWindow();
+                                *inputLoop = false;
+                                break;
+                            }
+                            case InputKey::UppercaseG:
+                            case InputKey::LowercaseG:{
+
+                                std::map<itemType, int>::iterator it;
+                                std::map<itemType, int> recipe = selectedItem->GetCraftingRecipe();
+                                for (it = recipe.begin(); it != recipe.end(); it++){
+
+                                    if (inventory::GetItem(it->first)->GetCount() < it->second){
+                                        *inputLoop = false;
+                                        crafting.HideWindow();
+                                        currPlayer.ToggleCraftingMovementBehavior();
+                                        alert.HideDialogBox();
+                                        break;
+                                    }
+                                    inventory::RemoveItem(inventory::GetItem(it->first), it->second);
+                                }
+
+                                inventory::AddItem(selectedItem);
+                                break;
+                            }
+                            default:
+                                continue;
                         }
-                        case InputKey::LowercaseQ:{
-                            inventory::RemoveItem(selectedItem);
-                            inv.RefreshInventoryWindow();
-                            break;
-                        }
-                        default:
-                            continue;
                     }
                 }
 
 
+
+
                 break;
-            }
+            } // Inventory
             case InputKey::UppercaseC:
             case InputKey::LowercaseC:{
-                crafting.ShowWindow(worldMap, "Crafting", *currPlayer.currentPosition);
+
+                if (!currPlayer.inventoryOpen && !inv.isOpen && !currPlayer.craftingOpen){
+                    currPlayer.ToggleCraftingMovementBehavior();
+                    crafting.ShowWindow(worldMap, "Crafting", *currPlayer.currentPosition);
+
+                    COORD cursor = crafting.getWindowPos().ToCOORD();
+                    std::vector<item*> craftableItems = crafting::CraftableItems();
+                    for (int i = 0; i < craftableItems.size(); i++){
+                        item* item = craftableItems[i];
+
+                        cursor.Y++;
+                        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
+
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Colors::DefaultWhite);
+                        std::cout << "(" << i + 1 << ") " << item->GetName();
+                    }
+
+                }
+
+                else if (currPlayer.craftingOpen){
+                    currPlayer.ToggleCraftingMovementBehavior();
+                    crafting.HideWindow();
+                }
+
                 break;
-            }
+            } // Crafting Menu
             case InputKey::UppercaseE:
             case InputKey::LowercaseE:{
 
-                logFile.Append("Player Interacting\n");
-                if (*currPlayer.playerFlag == PlayerFlags::BuildMode)
-                    break;
-
-                alert.HideDialogBox();
-
-                int currentInteractTile = worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y];
-
-                switch (currentInteractTile){
-                    case 14:{
-
-                        if (currPlayer.inCaves){
-                            worldMap = WorldGen::WorldGenCopy;
-                            console.DrawWorldMap(worldMap);
-                            *currPlayer.currentPosition = *currPlayer.currentCave;
-
-                            currPlayer.inCaves = false;
-                        }
-                        else{
-                            if (CaveGeneration::Caves[currPlayer.currentPosition->x][currPlayer.currentPosition->y].empty() || CaveGeneration::Caves.empty()){
-                                logFile.Append("Player has entered non-existent cave\n");
-                                CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(45, 1), *currPlayer.currentPosition);
-                            }
-
-                            worldMap = CaveGeneration::ToIntArray(CaveGeneration::Caves[currPlayer.currentPosition->x][currPlayer.currentPosition->y]);
-                            *currPlayer.currentCave = *currPlayer.currentPosition;
-
-                            console.DrawWorldMap(worldMap);
-                            vector2 getExit = CaveGeneration::GetExit(worldMap);
-                            *currPlayer.currentPosition = getExit;
-
-                            currPlayer.inCaves = true;
-
-                        }
+                if (*currPlayer.playerFlag == PlayerFlags::BuildMode){
+                    if (currPlayer.currentPosition->IsEqual(*currPlayer.lastPositionFlagChange)){
                         break;
                     }
+
+                    itemType currentItemType = currPlayer.selectedItem->GetType();
+                    if (currPlayer.selectedItem->GetCount() <= 0){
+                        break;
+                    }
+
+                    switch (currentItemType){
+                        case itemType::Planks:{
+                            inventory::RemoveItem(currPlayer.selectedItem);
+                            worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] = TileTypes::PlanksTile;
+                            break;
+                        }
+                        case itemType::StoneBricks:{
+                            inventory::RemoveItem(currPlayer.selectedItem);
+                            worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] = TileTypes::StoneBrick;
+                            break;
+                        }
+                        case itemType::Ladder:{
+                            inventory::RemoveItem(currPlayer.selectedItem);
+                            worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] = TileTypes::MineshaftTile;
+                            break;
+                        }
+                    }
                 }
+
+                if (*currPlayer.playerFlag == PlayerFlags::Survival){
+                    alert.HideDialogBox();
+
+                    int currentInteractTile = worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y];
+
+                    switch (currentInteractTile){
+                        case 14:{
+
+                            if (currPlayer.inCaves){
+                                worldMap = WorldGen::WorldGenCopy;
+                                console.DrawWorldMap(worldMap);
+                                *currPlayer.currentPosition = *currPlayer.currentCave;
+
+                                currPlayer.inCaves = false;
+                            }
+                            else{
+                                if (CaveGeneration::CaveSum(CaveGeneration::Caves[currPlayer.currentPosition->x][currPlayer.currentPosition->y]) < 10){
+                                    logFile.Append("Player has entered non-existent cave\n");
+                                    CaveGeneration::AddCave(CaveGeneration::GenerateSingleCave(35, 2, true), *currPlayer.currentPosition);
+                                }
+
+                                worldMap =CaveGeneration::Caves[currPlayer.currentPosition->x][currPlayer.currentPosition->y];
+                                *currPlayer.currentCave = *currPlayer.currentPosition;
+
+                                console.DrawWorldMap(worldMap);
+                                vector2 getExit = CaveGeneration::GetExit(worldMap);
+                                *currPlayer.currentPosition = getExit;
+
+                                currPlayer.inCaves = true;
+
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
+
                 break;
+            } // Interaction
+            case InputKey::F12:{
+                alert.ShowDialogBox(std::vector<std::string> {
+                    "Selected Item: " + currPlayer.selectedItem->GetName(),
+                    "Item Amount: " + std::to_string(currPlayer.selectedItem->GetCount()),
+                    "",
+                    "Flag: " + std::to_string((int)*currPlayer.playerFlag),
+                    &"Inventory Open: " [ currPlayer.inventoryOpen] ? "True" : "False",
+                    &"Crafting Open: " [ currPlayer.craftingOpen] ? "True" : "False",
+                }, worldMap, 112);
+                break;
+            }
+            case InputKey::EscapeBtn:{
+                if (alert.isActive){
+                    alert.HideDialogBox();
+                    break;
+                }
+
+                if (crafting.isOpen){
+                    crafting.HideWindow();
+                    currPlayer.ToggleCraftingMovementBehavior();
+                    break;
+                }
+
+                if (inv.isOpen){
+                    inv.HideWindow();
+                    currPlayer.ToggleInventoryMovementBehavior();
+                    break;
+                }
+
+
+                alert.ShowDialogBoxAlignLeft(std::vector<std::string>
+                        {
+                            "$PAUSED",
+                            "$----------",
+                            "1.) Save Game",
+                            "2.) Controls",
+                            "3.) Help",
+                            "4.) Crafting Recipes",
+                            "5.) Quit"
+                        },
+                worldMap, 112);
+
+                bool escape = false;
+                while (!escape){
+                    InputKey inputKey = InputManager::GetInput();
+                    switch (inputKey){
+                        case InputKey::EscapeBtn:{
+                            escape = true;
+                            alert.HideDialogBox();
+                            break;
+                        }
+                        case InputKey::Row1:{
+                            if (currPlayer.inCaves){
+                                alert.ShowDialogBox("You cannot save in a cave!", worldMap, 112);
+                                escape = true;
+                                break;
+                            }
+
+                            alert.ShowDialogBox(std::vector<std::string>{"Saving Game...", "This process may take a while. Do not quit during this time!"}, worldMap, 112);
+
+                            SaveState saveState;
+                            saveState.PlayerXPosition = currPlayer.currentPosition->x;
+                            saveState.PlayerYPosition = currPlayer.currentPosition->y;
+
+                            saveState.caveState = CaveGeneration::Caves;
+                            saveState.worldState = worldMap;
+
+                            saveState.items = inventory::items;
+                            saveState.WindowHeight = console.GetWindowSize().height;
+                            saveState.WindowWidth = console.GetWindowSize().width;
+
+                            bool success = binFile.WriteSaveFile(saveState);
+                            if (success){
+                                alert.ShowDialogBox("Game Successfully Saved!", worldMap, 112);
+                            }
+                            else{
+                                alert.ShowDialogBox("Game was unable to save!", worldMap, 112);
+                            }
+                            escape = true;
+
+
+                            break;
+                        }
+                        case InputKey::Row2:{
+                            alert.ShowDialogBoxAlignLeft(std::vector<std::string>
+                                {
+                                "$GAME CONTROLS",
+                                "$-------------------",
+                                "$MOVEMENT",
+                                "$-------------------",
+                                "WASD - Move Player",
+                                "\'C\' - Open Crafting Menu",
+                                "\'I\' - Open Inventory Menu",
+                                "\'B\' - Enter / Exit Build Mode",
+                                "\'X\' - Harvest Material",
+                                "\'E\' - Interact / Build (if applicable)",
+                                "$-------------------",
+                                "$Inventory / Crafting",
+                                "$-------------------",
+                                "Pressing the numbers associated with",
+                                "an item will open an action menu"
+                                },
+                            worldMap, 112);
+                            escape = true;
+                            break;
+                        }
+                    }
+                }
+
+
+
             }
         }
 
@@ -339,8 +625,13 @@ int main() {
             continue;
         }
 
-        // Prevent player from entering water if they are in survival
-        if (worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] == 0 && *currPlayer.playerFlag == PlayerFlags::Survival || worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] == 16){
+        // Indestructible and Impassible Tiles
+        if (*currPlayer.playerFlag == PlayerFlags::Survival &&
+            worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] == TileTypes::WaterTile ||
+            worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] == TileTypes::IndestructibleStoneTile ||
+            worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y] == TileTypes::StoneBrick
+        ){
+
             *currPlayer.currentPosition = *currPlayer.lastPosition;
             continue;
         }
@@ -349,6 +640,7 @@ int main() {
             if (currPlayer.currentPosition->x == 0 || currPlayer.currentPosition->x >= WorldGen::worldSize.width - 1 || currPlayer.currentPosition->y == 0 || currPlayer.currentPosition->y >= WorldGen::worldSize.height - 1){
 
                 vector2 newCavePos;
+                CaveGeneration::Caves[currPlayer.currentCave->x][currPlayer.currentCave->y] = worldMap;
 
                 if (currPlayer.currentPosition->x == 0){ // Create West Cave
                     newCavePos = currPlayer.currentCave->left();
@@ -373,7 +665,7 @@ int main() {
 
                 *currPlayer.currentCave = newCavePos;
 
-                int** newCave = CaveGeneration::ToIntArray(CaveGeneration::Caves[newCavePos.x][newCavePos.y]);
+                std::vector<std::vector<int>> newCave = CaveGeneration::Caves[newCavePos.x][newCavePos.y];
                 worldMap = newCave;
 
                 console.DrawWorldMap(newCave);
@@ -384,18 +676,18 @@ int main() {
 
         int lastPos = worldMap[currPlayer.lastPosition->x][currPlayer.lastPosition->y];
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), currPlayer.LastPosition_COORD());
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), TileMap::IntToColor(lastPos));
-        std::cout << TileMap::IntToChar(lastPos);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Tiles::Map[lastPos]->GetColor());
+        std::cout << Tiles::Map[lastPos]->GetChar();
 
-        int colorMode = *currPlayer.playerFlag == PlayerFlags::Survival ? 4 : 8;
-        char charMode = *currPlayer.playerFlag == PlayerFlags::Survival ? 'X' : '+';
+        int colorMode = *currPlayer.playerFlag == PlayerFlags::Survival ? 4 : 3;
+        char charMode = *currPlayer.playerFlag == PlayerFlags::Survival ? '0' : '+';
         int currentPosInt = worldMap[currPlayer.currentPosition->x][currPlayer.currentPosition->y];
 
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), currPlayer.CurrentPosition_COORD());
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), TileMap::IntToColorWithBackground(colorMode, currentPosInt));
-        std::cout << charMode;
+        //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), TileMap::IntToColorWithBackground(colorMode, currentPosInt));
 
-        *currPlayer.lastPosition = *currPlayer.currentPosition;
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Tiles::GetBackground(Tiles::Map[currentPosInt], Tiles::Map[colorMode]));
+        std::cout << charMode;
 
         switch (currentPosInt){
             case 14:{ // Mineshaft
@@ -403,12 +695,22 @@ int main() {
                 break;
             }
             default:
+                if (alert.isActive && worldMap[currPlayer.lastPosition->x][currPlayer.lastPosition->y] == TileTypes::MineshaftTile)
+                    alert.HideDialogBox();
+
                 break;
 
         }
 
+        *currPlayer.lastPosition = *currPlayer.currentPosition;
+
+        bool eventChanged = EventManager::Step();
+
         if (!currPlayer.inCaves){
             WorldGen::WorldGenCopy = worldMap;
+
+            if (eventChanged)
+                worldMap = WorldGen::WorldGenCopy;
         }
 
     }

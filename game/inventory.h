@@ -15,8 +15,11 @@ public:
 
     static void AddItem(item* item);
     static void RemoveItem(item* item);
+    static void RemoveItem(item* item, int count);
     static void RemoveAllItems(item* item);
     static bool ExistsInInventory(item item);
+
+    static item* GetItem(itemType itemType);
 };
 
 

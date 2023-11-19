@@ -4,7 +4,7 @@
 
 #include "window.h"
 #include "../WorldGen.h"
-#include "../Tools/TileMap.h"
+#include "Tiles.h"
 
 window::window(int windowHeight, int windowWidth, HANDLE _handle) {
     this->windowHeight = windowHeight;
@@ -15,7 +15,7 @@ window::window(int windowHeight, int windowWidth, HANDLE _handle) {
     this->selectedIndex = 0;
 }
 
-void window::ShowWindow(int **&mapArr, const std::string& windowName, vector2 playerPosition) {
+void window::ShowWindow(std::vector<std::vector<int>>&mapArr, const std::string& windowName, vector2 playerPosition) {
 #pragma region Adjust Window
     vector2 topLeftCorner = playerPosition;
     for (int r = 0; r < windowWidth / 2; r++){
@@ -93,10 +93,12 @@ void window::HideWindow() {
         vector2 vector = this->originalTiles[i].pos;
         int tileValue = this->originalTiles[i].tileNumber;
 
+        TileData* data = Tiles::Map[tileValue];
+
         COORD cursor = vector.ToCOORD();
         SetConsoleCursorPosition(this->consoleHandle, cursor);
-        SetConsoleTextAttribute(this->consoleHandle, TileMap::IntToColor(tileValue));
-        std::cout << TileMap::IntToChar(tileValue);
+        SetConsoleTextAttribute(this->consoleHandle, data->GetColor());
+        std::cout << data->GetChar();
     }
 
     isOpen = false;
@@ -113,6 +115,8 @@ void window::RefreshInventoryWindow() {
     COORD cursor = getWindowPos().ToCOORD();
     for (int i = 0; i < inventory::items.size(); i++){
         item* item = inventory::items[i];
+        if (item->GetCount() <= 0)
+            continue;
 
         cursor.Y++;
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
