@@ -704,9 +704,8 @@ int main() {
 
         *currPlayer.lastPosition = *currPlayer.currentPosition;
 
-        bool eventChanged = EventManager::Step();
-
         if (!currPlayer.inCaves){
+            bool eventChanged = EventManager::Step();
             WorldGen::WorldGenCopy = worldMap;
 
             if (eventChanged)
