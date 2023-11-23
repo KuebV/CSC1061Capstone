@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="CSC1061Capstone"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CSC1061Capstone">
+				<Option output="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/CSC1061Capstone.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/mary/Desktop/CSC1061Capstone/Tools"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 CSC1061Capstone"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CSC1061Capstone/fast">
+				<Option output="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/CSC1061Capstone.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/mary/Desktop/CSC1061Capstone/Tools"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 CSC1061Capstone/fast"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/mary/Desktop/CSC1061Capstone/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/CONSOLE.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/CONSOLE.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/CaveGeneration.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/CaveGeneration.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/Colors.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/File.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/File.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/InputKey.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/InputManager.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/InputManager.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/SaveState.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/Tag.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/Tag.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/Tools/Tile.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/WorldGen.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/WorldGen.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/EventManager.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/EventManager.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/EventTile.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/ItemManager.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/ItemManager.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/PlayerFlags.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/TileData.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/TileData.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/Tiles.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/Tiles.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/alertBox.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/alertBox.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/crafting.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/crafting.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/inventory.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/inventory.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/item.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/item.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/coal.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/dirt.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/iron.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/itemType.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/ladder.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/logs.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/nullItem.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/planks.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/stick.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/stone.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/stone_brick.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/stone_hatchet.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/items/stone_pickaxe.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/mainMenu.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/mainMenu.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/player.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/player.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/TIle_StoneBrick.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/TileTypes.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Boulder.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_BuildMode.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_CoalOre.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Dirt.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Forest.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Grass.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_IndestructibleStone.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_IronOre.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Mineshaft.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Planks.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Player.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Sand.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Stone.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Unknown.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/tiles/Tile_Water.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/window.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/game/window.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/main.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/rect.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/rect.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/vector2.cpp">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/vector2.h">
+			<Option target="CSC1061Capstone"/>
+		</Unit>
+		<Unit filename="C:/Users/mary/Desktop/CSC1061Capstone/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

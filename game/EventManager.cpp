@@ -20,13 +20,14 @@ bool EventManager::Step() {
         TileData* tileData = eTile->tileData;
 
         if (eTile->currentSteps >= tileData->GetTimedModification()){
-            WorldGen::WorldGenCopy[eTile->position.x][eTile->position.y] = tileData->GetAfterModificationInteger();
 
             if (tileData->SwapTimedModification()){ // Swap back to the base tile
                 console->DrawAtPos(tileData->GetChar(), eTile->position.ToCOORD(), tileData->GetColor());
+                WorldGen::WorldGenCopy[eTile->position.x][eTile->position.y] = tileData->GetValue();
             }
             else{
                 console->DrawAtPos(tileData->GetAfterModificationChar(), eTile->position.ToCOORD(), tileData->GetAfterModificationColor());
+                WorldGen::WorldGenCopy[eTile->position.x][eTile->position.y] = tileData->GetAfterModificationInteger();
             }
 
             UnregisterEvent(eTile->position);
