@@ -44,5 +44,9 @@ bool TileData::SwapTimedModification() {
     return false;
 }
 
+std::map<itemType, int> TileData::GetDrops() {
+    return std::map<itemType, int> { { itemType::NAI, -1 }};
+}
+
 
 

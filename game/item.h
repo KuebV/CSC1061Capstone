@@ -16,12 +16,12 @@ public:
     virtual int GetCount();
     virtual std::string GetName();
     virtual double GetDropMultiplier();
-    virtual int GetDropCount();
     virtual std::map<itemType, int> GetCraftingRecipe();
     virtual bool isCraftable();
 
     virtual void AddItem();
     virtual void RemoveItem();
+
 };
 
 

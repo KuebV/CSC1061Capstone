@@ -22,6 +22,10 @@ public:
     void HideWindow();
     void RefreshInventoryWindow();
 
+    void SetHeight(int height);
+    void SetWidth(int width);
+
+
     bool isOpen;
     vector2 getWindowPos();
 private:

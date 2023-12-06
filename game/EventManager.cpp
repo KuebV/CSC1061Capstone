@@ -4,6 +4,7 @@
 
 #include "EventManager.h"
 #include "../CONSOLE.h"
+#include "debugMenu.h"
 
 std::vector<EventTile> EventManager::eventVector;
 long int EventManager::globalSteps = 0;
@@ -41,12 +42,7 @@ bool EventManager::Step() {
 
     }
 
-    COORD coord;
-    coord.X = 1;
-    coord.Y = 1;
-
-    console->WriteAtPos("              ", coord, 192);
-    console->WriteAtPos(std::to_string(globalSteps), coord, 192);
+    debugMenu::UpdateValue("steps", std::to_string(globalSteps));
 
     return changesMade;
 }

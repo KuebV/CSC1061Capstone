@@ -23,6 +23,9 @@ public:
     int GetTimedModification() override { return timedEvent; }
 
     bool SwapTimedModification() override { return switchBack; }
+    std::map<itemType, int> GetDrops() override {
+        return { { itemType::Dirt, 2 }};
+    }
 
 private:
     char _char = '#';

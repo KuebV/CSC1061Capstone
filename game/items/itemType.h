@@ -19,6 +19,9 @@ enum itemType{
     Ladder,
     Planks,
     StoneBricks,
+    IronIngot,
+    IronHatchet,
+    IronPickaxe,
 
 };
 

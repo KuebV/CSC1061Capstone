@@ -26,6 +26,7 @@
 #include "game/crafting.h"
 #include "game/items/nullItem.h"
 #include "game/EventManager.h"
+#include "game/debugMenu.h"
 
 #define WORLDSIZE 119
 #define FILL_DENSITY 65
@@ -72,24 +73,24 @@ int main() {
     File binFile("savestate.bin");
     logFile.Silence(false);
 
-    std::unordered_map<std::string, std::string> worldGenTags = {
+    std::unordered_map<std::string, std::string> applicationTags = {
             { "worldSeed", "-1"},
-            { "worldDensity", "35"},
-            { "MaximumTiles", "800000000"}
+            { "debugMode", "false"},
+            { "cheatMode", "false"}
     };
-    std::string worldGenFile = "worldGen.tags";
+    std::string worldGenFile = "application.tags";
     if (!Tag::TagFileExists(worldGenFile))
-        Tag::CreateTagFile(worldGenFile, worldGenTags);
+        Tag::CreateTagFile(worldGenFile, applicationTags);
 
-    worldGenTags = Tag::ReadTagFile(worldGenFile);
+    applicationTags = Tag::ReadTagFile(worldGenFile);
 
     /*std::cout << "\nWorld Generation Project\n-----------------\n";
     std::cout << "Written by: Robert Thompson\nFor CSC1061\n";
     std::cout << "-----------------\n";
 
     std::cout << "\nWorld Generation\n-----------------\nYou can change settings in the file \"worldGen.tags\"\n";
-    std::cout << "World Seed: " << worldGenTags["worldSeed"] << '\n';
-    std::cout << "World Density: " << worldGenTags["worldDensity"] << '\n';
+    std::cout << "World Seed: " << applicationTags["worldSeed"] << '\n';
+    std::cout << "World Density: " << applicationTags["worldDensity"] << '\n';
 
     *//*for (int i = 0; i < 255; i++){ // Debug
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i);
@@ -111,17 +112,20 @@ int main() {
 
     system("CLS");
 
-    //WorldGen::worldSeed = std::stoi(worldGenTags["worldSeed"]) == -1 ? time(NULL) : std::stoi(worldGenTags["worldSeed"]);
-    srand(std::stoi(worldGenTags["worldSeed"]) == -1 ? time(NULL) : std::stoi(worldGenTags["worldSeed"]));
+    //WorldGen::worldSeed = std::stoi(applicationTags["worldSeed"]) == -1 ? time(NULL) : std::stoi(applicationTags["worldSeed"]);
+    srand(std::stoi(applicationTags["worldSeed"]) == -1 ? time(NULL) : std::stoi(applicationTags["worldSeed"]));
 
     std::vector<std::vector<int>> worldMap;
     vector2 playerSpawn;
     player currPlayer(playerSpawn);
 
+    bool debugMode = Tag::ToBoolean(applicationTags["debugMode"]);
+    bool cheatMode = Tag::ToBoolean(applicationTags["cheatMode"]);
+
     console.SetTextAttribute(112);
 
     if (result == ""){
-        worldMap = WorldGen::GenerateBasicWorld(std::stoi(worldGenTags["worldDensity"]));
+        worldMap = WorldGen::GenerateBasicWorld(35);
         logFile.Append("Basic World Generated. Smoothing Terrain...\n");
 
         logFile.Append("Basic World Generated. Smoothing Terrain...\n");
@@ -183,10 +187,20 @@ int main() {
     WorldGen::WorldGenCopy = worldMap;
     currPlayer.selectedItem = new nullItem();
 
+    if (cheatMode){
+        std::vector<item*> itemList = ItemManager::ItemList();
+        for (int i = 0; i < itemList.size(); i++){
+            for (int j = 0; j < 999; j++){
+                inventory::AddItem(itemList[i]);
+            }
+        }
+    }
+
     console.DrawWorldMap(worldMap);
     alert.ShowDialogBox(std::vector<std::string>{"Hello!", "Welcome to Terra", "Press your ESCAPE key to close this box!"}, worldMap, 112);
 
 
+    debugMenu::Register("handleHarvesting");
     // Player Movement & World Controls
     while (true){
 
@@ -212,6 +226,9 @@ int main() {
             case InputKey::LowercaseI:{ // Inventory
 
                 if (!currPlayer.inventoryOpen && !inv.isOpen && !currPlayer.craftingOpen){
+                    int size = inventory::items.size();
+
+                    inv.SetHeight(size + 2);
                     currPlayer.ToggleInventoryMovementBehavior();
                     inv.ShowWindow(worldMap, "Inventory: ", *currPlayer.currentPosition);
 
@@ -410,6 +427,8 @@ int main() {
 
                 if (!currPlayer.inventoryOpen && !inv.isOpen && !currPlayer.craftingOpen){
                     currPlayer.ToggleCraftingMovementBehavior();
+
+                    crafting.SetHeight(crafting::CraftableItems().size() + 2);
                     crafting.ShowWindow(worldMap, "Crafting", *currPlayer.currentPosition);
 
                     COORD cursor = crafting.getWindowPos().ToCOORD();
@@ -611,6 +630,46 @@ int main() {
                             escape = true;
                             break;
                         }
+                        case InputKey::Row3:{
+                            alert.ShowDialogBoxAlignLeft(std::vector<std::string>
+                                {
+                                    "$HELP",
+                                    "$----------------",
+                                    "If you're experiencing bugs, that is to be expected due",
+                                    "the scale of this game!",
+                                    "",
+                                    "In the case that you cannot move, pressing \'C\' or \'I\' twice may help",
+                                    "If you trap yourself, press \'F12\' to respawn"
+
+                                },
+                            worldMap, 112);
+                            escape = true;
+                            break;
+                        }
+                        case InputKey::Row4:{
+                            std::vector<std::string> line = { "$CRAFTING RECIPES", "$-----------------------", ""};
+
+                            for (int i = 0; i < ItemManager::ItemList().size(); i++){
+                                if (!ItemManager::ItemList()[i]->isCraftable())
+                                    continue;
+
+                                std::string text = "";
+                                text += ItemManager::ItemList()[i]->GetName() + ": ";
+
+                                std::map<itemType, int> requiredItems = ItemManager::ItemList()[i]->GetCraftingRecipe();
+                                std::map<itemType, int>::iterator _it;
+
+                                for (_it = requiredItems.begin(); _it != requiredItems.end(); _it++){
+                                    text += ItemManager::GetItem(_it->first)->GetName() + " x" + std::to_string(_it->second) + " ";
+                                }
+
+                                line.push_back(text);
+                            }
+
+                            alert.ShowDialogBoxAlignLeft(line, worldMap, 112);
+                            escape = true;
+                            break;
+                        }
                     }
                 }
 
@@ -711,6 +770,11 @@ int main() {
             if (eventChanged)
                 worldMap = WorldGen::WorldGenCopy;
         }
+
+        if (debugMode)
+            debugMenu::DrawMenu();
+
+        inventory::equippedItem = currPlayer.selectedItem;
 
     }
 

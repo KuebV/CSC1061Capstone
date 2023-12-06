@@ -4,6 +4,8 @@
 
 #include <memory>
 #include "Tag.h"
+#include <string>
+#include <sstream>
 
 void Tag::CreateTagFile(const std::string &tagFileName, std::unordered_map<std::string, std::string> pairValue) {
     std::ofstream fStream;
@@ -60,3 +62,16 @@ bool Tag::TagFileExists(const std::string &tagFileName) {
     }
     return false;
 }
+
+int Tag::ToInteger(const std::string &str) {
+    return std::stoi(str);
+}
+
+bool Tag::ToBoolean(const std::string &str){
+    bool x;
+    std::istringstream is(str);
+    is >> std::boolalpha >> x;
+    return x;
+
+}
+

@@ -12,6 +12,7 @@
 class inventory {
 public:
     static std::vector<item*> items;
+    static item* equippedItem;
 
     static void AddItem(item* item);
     static void RemoveItem(item* item);

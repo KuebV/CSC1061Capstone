@@ -16,6 +16,10 @@ public:
     static std::unordered_map<std::string, std::string> ReadTagFile(const std::string& tagFileName);
     static bool KeyExists(std::unordered_map<std::string, std::string> map, std::string key);
     static bool TagFileExists(const std::string& tagFileName);
+
+    static int ToInteger(const std::string& str);
+    static bool ToBoolean(const std::string& str);
+
 private:
     static std::string getTag(const std::string& line);
     static std::string getValue(const std::string& line, const std::string& tag);

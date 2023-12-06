@@ -18,6 +18,9 @@ public:
     int GetAfterModificationColor() override { return _afterForegroundColor; }
 
     TileTypes GetType() override { return _type; }
+    std::map<itemType, int> GetDrops() override {
+        return { { itemType::Coal, 1 }};
+    }
 
 private:
     char _char = '@';

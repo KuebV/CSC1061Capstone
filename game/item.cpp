@@ -17,10 +17,6 @@ std::string item::GetName() {
 }
 
 double item::GetDropMultiplier() {
-    return 0.0;
-}
-
-int item::GetDropCount() {
     return 1;
 }
 

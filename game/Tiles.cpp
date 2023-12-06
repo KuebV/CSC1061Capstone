@@ -105,4 +105,3 @@ int Tiles::GetBackground(TileData *backgroundTile, TileData *foregroundTile) {
             }
     }
 }
-

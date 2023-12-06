@@ -13,7 +13,6 @@ public:
     std::string GetName() override { return _name;}
     int GetCount() override { return _count; }
     double GetDropMultiplier() override { return _dropMultiplier; }
-    int GetDropCount() override { return _dropCount; }
 
     void AddItem() override { _count++; }
     void RemoveItem() override { _count--; }
@@ -31,7 +30,7 @@ private:
     std::string _name = "Stone Hatchet";
     int _count = 0;
     itemType _type = itemType::StoneHatchet;
-    double _dropMultiplier = 1.0;
+    double _dropMultiplier = 2;
     int _dropCount = 1;
 };
 

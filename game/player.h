@@ -18,14 +18,12 @@
 
 class player {
 public:
-
     bool disableMovement;
     bool inventoryOpen;
     bool inCaves;
     bool craftingOpen;
 
     item* selectedItem;
-
 
     std::unique_ptr<PlayerFlags> playerFlag = std::make_unique<PlayerFlags>();
     std::unique_ptr<vector2> currentPosition = std::make_unique<vector2>();

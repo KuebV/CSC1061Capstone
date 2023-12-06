@@ -18,79 +18,26 @@
 #include "items/ladder.h"
 #include "items/planks.h"
 #include "items/stone_brick.h"
+#include "items/ironIngot.h"
+#include "items/iron_hatchet.h"
+#include "items/iron_pickaxe.h"
+#include "debugMenu.h"
+#include "tiles/TileTypes.h"
+#include "Tiles.h"
 
 void ItemManager::handleHarvesting(int resourceTile) {
-    std::vector<item*> resources = getResource(resourceTile);
-    for (auto & resource : resources)
-        inventory::AddItem(resource);
-}
+    std::map<itemType, int>::iterator _it;
+    TileData* tileData = Tiles::Map[resourceTile];
+    std::map<itemType, int> drops = tileData->GetDrops();
 
-/*0 - Tile_Water
- * 1 - solid
- * 2 - sand
- * 3 - sand
- * 4 - player
- * 5 - forest
- * 6 - rocks
- * 7 - dirt
- * 8 - buildingMode
- * 14 - mineshaft
- * 15 - stone
- * 16 - indestructible stone
- * 17 - coal
- * 18 - iron
- * */
-std::vector<item *> ItemManager::getResource(int resourceTile) {
-    std::vector<item*> itemDrops;
+    item* equippedItem = inventory::equippedItem;
 
-    switch (resourceTile){
-        case 1:{
-            item* item = new dirt();
-            setDropCount(item);
-            itemDrops.push_back(item);
-            break;
-        }
-        case 5:{
-            item* _stick = new stick();
-            item* _log = new logs();
-
-            setDropCount(_stick);
-            setDropCount(_log);
-
-            itemDrops.push_back(_stick);
-            itemDrops.push_back(_log);
-            break;
-        }
-        case 6:{
-            item* _stone = new stone();
-            setDropCount(_stone);
-            itemDrops.push_back(_stone);
-            break;
-        }
-        case 17:{
-            item* _coal = new coal();
-            setDropCount(_coal);
-            itemDrops.push_back(_coal);
-            break;
-        }
-        case 18:{
-            item* _iron = new iron();
-            setDropCount(_iron);
-            itemDrops.push_back(_iron);
-            break;
-        }
+    for (_it = drops.begin(); _it != drops.end(); _it++){
+        int itemMultiplier = floor(_it->second * equippedItem->GetDropMultiplier());
+        for (int i = 0; i < itemMultiplier; i++)
+            inventory::AddItem(ItemManager::GetItem(_it->first));
     }
 
-    return itemDrops;
-}
-
-void ItemManager::setDropCount(item *&item) {
-    int dropAmount = item->GetDropCount();
-    double dropMultiplier = item->GetDropMultiplier();
-
-    double getTotalDrops = floor(dropMultiplier * dropAmount);
-    for (int i = 0; i < getTotalDrops; i++)
-        item->AddItem();
 }
 
 std::vector<item *> ItemManager::ItemList() {
@@ -106,6 +53,9 @@ std::vector<item *> ItemManager::ItemList() {
         new ladder(),
         new planks(),
         new stone_brick(),
+        new ironIngot(),
+        new iron_hatchet(),
+        new iron_pickaxe(),
     };
 }
 

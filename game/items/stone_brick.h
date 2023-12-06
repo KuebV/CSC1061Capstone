@@ -13,7 +13,6 @@ public:
     std::string GetName() override { return _name;}
     int GetCount() override { return _count; }
     double GetDropMultiplier() override { return _dropMultiplier; }
-    int GetDropCount() override { return _dropCount; }
 
     void AddItem() override { _count++; }
     void RemoveItem() override { _count--; }

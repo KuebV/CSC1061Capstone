@@ -7,6 +7,7 @@
 #include "items/nullItem.h"
 
 std::vector<item*> inventory::items;
+item* inventory::equippedItem;
 
 bool inventory::ExistsInInventory(item item) {
     for (int i = 0; i < items.size(); i++){
@@ -28,13 +29,19 @@ void inventory::AddItem(item* item) {
     items.push_back(item);
 }
 
-void inventory::RemoveItem(item *item) {
+void inventory::RemoveItem(item *it) {
     for (int i = 0; i < items.size(); i++){
-        if (items[i]->GetType() == item->GetType()){
+        if (items[i]->GetType() == it->GetType()){
             items[i]->RemoveItem();
             return;
         }
     }
+
+    auto lessZero = [](item* it) { return it->GetCount() <= 0; };
+    if (auto _it = std::find_if(begin(items), end(items), lessZero); _it != end(items)){
+        items.erase(_it);
+    }
+
 }
 
 void inventory::RemoveItem(item *it, int count) {
@@ -43,30 +50,15 @@ void inventory::RemoveItem(item *it, int count) {
             for (int j = 0; j < count; j++){
                 items[i]->RemoveItem();
             }
-            return;
         }
+    }
+
+    auto lessZero = [](item* it) { return it->GetCount() <= 0; };
+    if (auto _it = std::find_if(begin(items), end(items), lessZero); _it != end(items)){
+        items.erase(_it);
     }
 }
 
-// ?????
-// Why did I write this?
-void inventory::RemoveAllItems(item *item) {
-    for (int i = 0; i < items.size(); i++){
-        if (items[i]->GetType() == item->GetType()){
-            items[i]->RemoveItem();
-            return;
-        }
-    }
-
-    for (int i = 0; i < items.size(); i++){
-        if (items[i]->GetType() == item->GetType()){
-            items.erase(items.begin() + i);
-            break;
-        }
-    }
-
-
-}
 
 item *inventory::GetItem(itemType itemType) {
     for (int i = 0; i < items.size(); i++)
@@ -74,6 +66,7 @@ item *inventory::GetItem(itemType itemType) {
             return items[i];
     return new nullItem();
 }
+
 
 
 

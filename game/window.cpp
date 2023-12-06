@@ -126,4 +126,12 @@ void window::RefreshInventoryWindow() {
     }
 }
 
+void window::SetHeight(int height) {
+    this->windowHeight = height;
+}
+
+void window::SetWidth(int width) {
+    this->windowWidth = width;
+}
+
 

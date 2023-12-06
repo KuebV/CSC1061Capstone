@@ -9,6 +9,8 @@
 #include <string>
 #include "../Tools/Colors.h"
 #include "tiles/TileTypes.h"
+#include "items/itemType.h"
+#include <map>
 
 class TileData {
 public:
@@ -22,6 +24,8 @@ public:
     virtual int GetTimedModification();
     virtual bool IsHarvestable();
     virtual bool SwapTimedModification();
+
+    virtual std::map<itemType, int> GetDrops();
 };
 
 
